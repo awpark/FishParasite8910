@@ -3,12 +3,12 @@ title: "Parasite species distribution modeling"
 author: "Tad Dallas, Andrew Park, and John M. Drake"
 output:
   html_document:
-    fig_caption: yes
     fig_height: 6
     fig_width: 6
     highlight: tango
     theme: journal
   pdf_document: default
+bibliography: carp.bib
 ---
 
 
@@ -17,20 +17,26 @@ output:
 
 ## Introduction
 
+### Species distirbution models and the importance of them
 
 
 
 ### Knowledge gap
 
-Multi-host parasites are everywhere, but it's difficult to determine what hosts that some parasites are able to infect. Are there commonalities among parasitized host species that could allow for prediction of parasite spillover? We examine that here using fish-parasites as a case study. We train a series of models on parasites of fish species, and determine the predictive accuracy of these models.
+What constrains the range of hosts that a parasite can infect? Is there a simple range of host functional traits that can determine the likelihood that a parasite infects a given host species? How well can we predict parasite occurrences given _only_ some host life history traits?
+
+### Thesis paragraph
+
+Here, I apply a series of predictive models in order to predict parasite occurrence across a range of potential host species for a large set of parasites of freshwater fish, using host functional traits, and geographic location. 
 
 
 
-### problems:
-* Model is tested on the training set. There's not much data out there, especially on occurrences. 
+
+### thorns in my side:
+
 * Absence data aren't true absences. Should I even train on these data if the model treats them as true absences?
-* 
 
+* How much time to invest reading density estimation literature? 
 
 
 
@@ -38,12 +44,14 @@ Multi-host parasites are everywhere, but it's difficult to determine what hosts 
 ## Methods
 
 ### Data and processing
- what the data are (fish-parasite data obtained from FishBase, and Strona's FishPest database)
- data selection, row removal, and imputation
+ We use an existing global database of fish-parasite associations [@strona2013] consisting of over 38000 parasite records spanning a large diversity of parasites (Acanthocephala, Cestoda, Monogenea, Nematoda, Trematoda). In order to allow for cross-validation and accurate prediction, we constrained our ananlyses to parasites with a minimum of 50 host records. In other words, we only examined parasites that had been recorded more than 50 times, but these occurrences could be on fewer than 50 host species. The inclusion of duplicate occurrences was only permitted if the parasite was recorded on a host in a different location, based on latitude and longitude values. Our response variable was parasite occurrence (binary), and was predicted using only host life history traits, and geographic location of host capture. Host trait information was obtained through the FishPest database [@strona2012; @strona2013], and FishBase [@froese2010]. Host traits descriptions are provided in Table 1
  
  
+### Model formulation 
+  We trained a series of models in order to compare predictive performance of different techniques. Each model was trained on 70% of the data, and accuracy was determined from the remaining 30%. This process was repeated $z$ times ($z$ = 20). We generated background data by randomly sampling host species where parasite $i$ was not recorded. To maintain proportional training data, the number of random samples was selected to be five times greater than the occurrence records. 
+  
 ### Models used
- discuss baseline, all zero, and all one scenarios (my nulls), and then go into other algorithms used (brt, svm, lr, rf)
+ discuss null predictions scenario, and then go into other algorithms used (brt, svm, lr, rf)
 
 
 
@@ -51,190 +59,106 @@ Multi-host parasites are everywhere, but it's difficult to determine what hosts 
 
 
 
-
-
-
-
-
-
-
-
-
-
+### Strona's FishPest database
 
 
 ```r
-# list of imputed data matrices
-imputedData=list()
+load('/media/drakelab/Lexar/8910Project/Analysis/pest.Rdata')
+library(rfishbase); library(gbm); library(ROCR); library(e1071); library(randomForest)
+## Creating a `fishMatrix` equiv.
+#edgePest=edge2matrix(cbind(pest[,'H_SP'], pest[,'P_SP']))
+#colnames(edgePest)=unique(pest[,'P_SP'])
+#rownames(edgePest)=unique(pest[,'H_SP'])
+#edgePest=edgePest[,-which(colSums(edgePest) < 50)]
 
 # storage for model outputs
-baseline.auc=vector(); allone.auc=vector(); allzero.auc=vector()
+baseline.auc=vector(); 
 brtModel=list(); brt.best.iter=list(); brt.preds=list(); brt.perf=list(); brt.perfAUC=vector()
 svmModel=list(); svm.preds=list(); svm.perf=list(); svm.perfAUC=vector()
 lrModel=list(); lr.preds=list(); lr.perf=list(); lr.perfAUC=vector()
 rfModel=list(); rf.preds=list(); rf.perf=list(); rf.perfAUC=vector()
 
 
-for(i in 1:nrow(freshMatrix3)){
-#data imputation
-  dat = getPointsObject(freshMatrix3[i,], FT)
-  dat = rfImpute(dat[,-1], dat[,1])
-  imputedData[[i]] = dat
-  
-  pres=which(dat[,1]==1)
+## Creating a pointsObject
+#hostPest = unique(pest[,-c(1:3)], MARGIN=1)
+hostPest = pest[,-c(1:3)]
+parPest = names(summary(pest[,'P_SP'])>50); parPest=parPest[-100]
+
+ret=list()
+reps=20
+for(z in 1:reps){
+  for(i in 1:length(parPest)){
+#create presence vector
+  presence=rep(0, nrow(hostPest))
+  presence[which(hostPest[,'P_SP'] == parPest[i])]=1
+
+#make some 'na' into actual NAs
+  ugh=which(hostPest=='na', arr.ind=TRUE)
+  hostPest[ugh]=NA
+  hostPest[,7:17]=apply(hostPest[,7:17],2, as.numeric)
+
+#Only train on some of the absences, since they're totally not true absences
+  cutDown=c(which(presence==1), sample(which(presence==0), 5*sum(presence)))
+  presence1=presence[cutDown]
+  dat=hostPest[cutDown, -c(1,5)]
+
+#Impute the data
+  impDat=rfImpute(dat[,-c(1:3)], presence1)
+  dat=impDat[,-1]
+
+flag=0
+ while(flag == 0){
+  # This makes sure that the test set contains at least 4 hosts on which the parasite actually occurs
   inds=sample(1:nrow(dat), 0.7*nrow(dat))
-  if(sum(pres %in% inds) < 4){inds[1:4]=pres[1:4]}
-  
+  if(sum(presence1[inds]) < 4){inds[1:4] = which(presence1 == 1)[1:4]}
+
+  #Set up a prelim train set and a test set
   train = dat[inds,]
-  test = dat[-inds,]
+  test = dat[-inds,]  
+  if(all(unique(train$GEO) %in% unique(test$GEO))){flag=1}
+ }
+ 
+ #Presences
+  prezTR=presence1[inds]
+  prezTE=presence1[-inds]
+
   
   #baseline expectations and null models
-  baseline.auc[i] = performance(prediction(test[sample(1:nrow(test), nrow(test)),1], test[,1]), 'auc')@y.values
+  baseline.auc[i] = performance(prediction(sample(presence[-inds], length(presence[-inds])), presence[-inds]), 'auc')@y.values
    
  ##trained models
   #boosted regression trees
-  weights=1/(sum(train[,1])/nrow(train))
-  brtModel[[i]] = gbm(train[,1] ~ ., data=train[,-1], n.trees=60000, interaction.depth=4, distribution='bernoulli', weights=1+(train[,1] * weights))
-  brt.best.iter[[i]] = gbm.perf(brtModel[[i]], method="OOB")
-  brt.preds[[i]] = prediction(predict(brtModel[[i]], newdata=test[,-1], n.trees=brt.best.iter[[i]]), test[,1])
+    brtModel[[i]] = gbm(prezTR ~ ., data=train, n.trees=50000, interaction.depth=4, distribution='bernoulli')
+    brt.best.iter[[i]] = gbm.perf(brtModel[[i]], method="OOB")
+    brt.preds[[i]] = prediction(predict(brtModel[[i]], newdata=test, n.trees=brt.best.iter[[i]]), prezTE)
     brt.perf[[i]] = performance(brt.preds[[i]],"tpr","fpr")
-  brt.perfAUC[i]=unlist(performance(brt.preds[[i]], 'auc')@y.values)
+    brt.perfAUC[i]=unlist(performance(brt.preds[[i]], 'auc')@y.values)
 
   #support vector machines
-  svmModel[[i]] = svm(train[,1] ~ ., data=train[,-1], cross=2, probability=TRUE)
-  svm.preds[[i]] = prediction(predict(svmModel[[i]], test[,-1]), test[,1])
-  svm.perf[[i]] = performance(svm.preds[[i]],"tpr","fpr")
-  svm.perfAUC[i] = unlist(performance(svm.preds[[i]], 'auc')@y.values)
+    svmModel[[i]] = svm(prezTR ~ ., data=train, probability=TRUE)
+    svm.preds[[i]] = prediction(predict(svmModel[[i]], test), prezTE)
+    svm.perf[[i]] = performance(svm.preds[[i]],"tpr","fpr")
+    svm.perfAUC[i] = unlist(performance(svm.preds[[i]], 'auc')@y.values)
 
   #logistic regression
-  lrModel[[i]] = glm(train[,1] ~ ., data=train[,-1], family=binomial)
-  lr.preds[[i]] = prediction(predict(lrModel[[i]], test[,-1]), test[,1])
-  lr.perf[[i]] = performance(lr.preds[[i]],"tpr","fpr")
-  lr.perfAUC[i] = unlist(performance(lr.preds[[i]], 'auc')@y.values)
+    lrModel[[i]] = glm(prezTR ~ ., data=train, family=binomial)
+    lr.preds[[i]] = prediction(predict(lrModel[[i]], test), prezTE)
+    lr.perf[[i]] = performance(lr.preds[[i]],"tpr","fpr")
+    lr.perfAUC[i] = unlist(performance(lr.preds[[i]], 'auc')@y.values)
 
   #random forest
-  rfModel[[i]] = randomForest(train[,1] ~ ., data=train[,-1])
-  rf.preds[[i]] = prediction(predict(rfModel[[i]], test[,-1]), test[,1])
-  rf.perf[[i]] = performance(rf.preds[[i]],"tpr","fpr")
-  rf.perfAUC[i] = unlist(performance(rf.preds[[i]], 'auc')@y.values)
-  
+    rfModel[[i]] = randomForest(prezTR ~ ., data=train)
+    rf.preds[[i]] = prediction(predict(rfModel[[i]], test), prezTE)
+    rf.perf[[i]] = performance(rf.preds[[i]],"tpr","fpr")
+    rf.perfAUC[i] = unlist(performance(rf.preds[[i]], 'auc')@y.values)
   print(i)
-}
+  }
+
+ ret[[z]]=cbind(baseline.auc, brt.perfAUC, svm.perfAUC, lr.perfAUC, rf.perfAUC)
+ colnames(ret[[z]])=c('BASE', 'BRT', 'SVM', 'LR', 'RF')
+ }
 ```
 
-
-
-
-
-
-```r
-baseline.auc=unlist(baseline.auc)
-#allzero.auc=unlist(allzero.auc)
-#allone.auc=unlist(allone.auc)
-
-aucs=cbind(baseline.auc, brt.perfAUC, svm.perfAUC, lr.perfAUC, rf.perfAUC)
-colnames(aucs)=c('base', 'brt', 'svm', 'logr', 'rf')
-
-meanAUC=colMeans(aucs)
-meanSE = apply(aucs,2,sd) / sqrt(nrow(aucs))
-meanSD = apply(aucs,2,sd)
-  
-plot(1:5, meanAUC, ylim=c(0.45, 1), xlim=c(0.5,5.5), las=1, pch=16, tck=0.01, xaxt='n', xlab='Predictive model used', ylab='Area Under ROC curve')
-abline(h=0.5, col=grey(0.5), lty=2, lwd=2)
-segments(x0=1:5, y0=meanAUC+meanSD, y1=meanAUC-meanSD, col=grey(0.8),lwd=2)
-points(1:5, meanAUC, pch=16, cex=1.5)
-axis(1, at=1:5, labels=c('Base', 'BRT', 'SVM', 'LR', 'RF'), tck=0.01, srt=30)
-```
-
-![Mean predictive accuracy, measured as area under the ROC curve, for our null expectation (Base), boosted regression trees (BRT), support vector machines (SVM), logistic regression (LR), and random forest models (RF).](figure/unnamed-chunk-5-1.png) 
-
-
-
-
-
-
-```r
-# list of imputed data matrices
-m.imputedData=list()
-
-# storage for model outputs
-m.baseline.auc=vector(); m.allone.auc=vector(); m.allzero.auc=vector()
-m.brtModel=list(); m.brt.best.iter=list(); m.brt.preds=list(); m.brt.perf=list(); m.brt.perfAUC=vector()
-m.svmModel=list(); m.svm.preds=list(); m.svm.perf=list(); m.svm.perfAUC=vector()
-m.lrModel=list(); m.lr.preds=list(); m.lr.perf=list(); m.lr.perfAUC=vector()
-m.rfModel=list(); m.rf.preds=list(); m.rf.perf=list(); m.rf.perfAUC=vector()
-
-
-
-for(i in 1:nrow(marineMatrix3)){
-#data imputation
-  dat = getPointsObject(marineMatrix3[i,], MT)
-  dat = rfImpute(dat[,-1], dat[,1])
-  m.imputedData[[i]] = dat
-    
-  pres=which(dat[,1]==1)
-  inds=sample(1:nrow(dat), 0.7*nrow(dat))
-  if(sum(pres %in% inds) < 4){inds[1:4]=pres[1:4]}
-  train = dat[inds,]
-  test = dat[-inds,]
-  
-  #baseline expectations and null models
-  m.baseline.auc[i] = performance(prediction(test[sample(1:nrow(test), nrow(test)),1], test[,1]), 'auc')@y.values
-   
- ##trained models
-  #boosted regression trees
-  weights=1 / (sum(train[,1])/nrow(train))
-  m.brtModel[[i]] = gbm(train[,1] ~ ., data=train[,-1], n.trees=60000, interaction.depth=4, distribution='bernoulli', weights=1+(train[,1] * weights))
-  m.brt.best.iter[[i]] = gbm.perf(m.brtModel[[i]], method="OOB")
-  m.brt.preds[[i]] = prediction(predict(m.brtModel[[i]],newdata=test[,-1],n.trees=m.brt.best.iter[[i]]), test[,1])
-  m.brt.perf[[i]] = performance(m.brt.preds[[i]],"tpr","fpr")
-  m.brt.perfAUC[i]=unlist(performance(m.brt.preds[[i]], 'auc')@y.values)
-
-  #support vector machines
-  m.svmModel[[i]] = svm(train[,1] ~ ., data=train[,-1])
-  m.svm.preds[[i]] = prediction(predict(m.svmModel[[i]], test[,-1]), test[,1])
-  m.svm.perf[[i]] = performance(m.svm.preds[[i]],"tpr","fpr")
-  m.svm.perfAUC[i] = unlist(performance(m.svm.preds[[i]], 'auc')@y.values)
-
-  #logistic regression
-  m.lrModel[[i]] = glm(train[,1] ~ ., data=train[,-1], family=binomial)
-  m.lr.preds[[i]] = prediction(predict(m.lrModel[[i]], test[,-1]), test[,1])
-  m.lr.perf[[i]] = performance(m.lr.preds[[i]],"tpr","fpr")
-  m.lr.perfAUC[i] = unlist(performance(m.lr.preds[[i]], 'auc')@y.values)
-
-  #random forest
-  m.rfModel[[i]] = randomForest(train[,1] ~ ., data=train[,-1])
-  m.rf.preds[[i]] = prediction(predict(m.rfModel[[i]], test[,-1]), test[,1])
-  m.rf.perf[[i]] = performance(m.rf.preds[[i]],"tpr","fpr")
-  m.rf.perfAUC[i] = unlist(performance(m.rf.preds[[i]], 'auc')@y.values)
-  
-  print(i)
-}
-```
-
-
-
-
-```r
-m.baseline.auc=unlist(m.baseline.auc)
-#m.allzero.auc=unlist(m.allzero.auc)
-#m.allone.auc=unlist(m.allone.auc)
-
-m.aucs=cbind(m.baseline.auc, m.brt.perfAUC, m.svm.perfAUC, m.lr.perfAUC, m.rf.perfAUC)
-colnames(m.aucs)=c('base', 'brt', 'svm', 'logr', 'rf')
-
-m.meanAUC=colMeans(m.aucs)
-m.meanSE = apply(m.aucs,2,sd) / sqrt(nrow(m.aucs))
-m.meanSD = apply(m.aucs,2,sd)
-  
-plot(1:5, m.meanAUC, ylim=c(0.45, 1), xlim=c(0.5,5.5), las=1, pch=16, tck=0.01, xaxt='n', xlab='Predictive model used', ylab='Area Under ROC curve')
-abline(h=0.5, col=grey(0.5), lty=2, lwd=2)
-segments(x0=1:5, y0=m.meanAUC+m.meanSD, y1=m.meanAUC-m.meanSD, col=grey(0.8),lwd=2)
-points(1:5, m.meanAUC, pch=16, cex=1.5)
-axis(1, at=1:5, labels=c('Base', 'BRT', 'SVM', 'LR', 'RF'), tck=0.01, srt=30)
-```
-
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7-1.png) 
 
 
 
@@ -242,4 +166,52 @@ axis(1, at=1:5, labels=c('Base', 'BRT', 'SVM', 'LR', 'RF'), tck=0.01, srt=30)
 
 ## Results
 
+
+
+
+
+
+
+
+
 ## Discussion
+
+
+
+## Tables
+
+Table 1: Host traits examined and their corresponding units
+
+Table 2: Details for parasites modeled, including number of occurrences, and life history information.
+
+
+## Figures
+
+
+
+
+
+
+
+
+## References 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

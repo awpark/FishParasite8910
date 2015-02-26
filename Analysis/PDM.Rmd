@@ -2,30 +2,25 @@
 title: "Parasite species distribution modeling"
 author: "Tad Dallas, Andrew Park, and John M. Drake"
 output:
+  pdf_document: default
   html_document:
     fig_height: 6
     fig_width: 6
     highlight: tango
     theme: journal
-  pdf_document: default
+bibliography: carp.bib
 ---
 
 
 ```{r echo=FALSE, message=FALSE, comment=FALSE}
 ## Load in some data and required packages
-#load('/media/drakelab/Lexar/8910Project/Analysis/fishParty(reduced).RData')
-#load('/media/drakelab/Lexar/8910Project/Analysis/fishParty.RData')
 library(rfishbase); library(gbm); library(ROCR); library(e1071); library(randomForest)
-
 ```
 
 
 ## Introduction
 
 ### Species distirbution models and the importance of them
-
-
-
 
 
 
@@ -52,7 +47,7 @@ Here, I apply a series of predictive models in order to predict parasite occurre
 ## Methods
 
 ### Data and processing
- We use an existing global database of fish-parasite associations (@strona) consisting of over 38000 parasite records spanning a large diversity of parasites (Acanthocephala, Cestoda, Monogenea, Nematoda, Trematoda). In order to allow for cross-validation and accurate prediction, we constrained our ananlyses to parasites with a minimum of 50 host records. In other words, we only examined parasites that had been recorded more than 50 times, but these occurrences could be on fewer than 50 host species. The inclusion of duplicate occurrences was only permitted if the parasite was recorded on a host in a different location, based on latitude and longitude values. Our response variable was parasite occurrence (binary), and was predicted using only host life history traits, and geographic location of host capture. Host trait information was obtained through the FishPest database (@strona), and FishBase (@margoleise). Host traits descriptions are provided in Table 1
+ We use an existing global database of fish-parasite associations [@strona2013] consisting of over 38000 parasite records spanning a large diversity of parasites (Acanthocephala, Cestoda, Monogenea, Nematoda, Trematoda). In order to allow for cross-validation and accurate prediction, we constrained our ananlyses to parasites with a minimum of 50 host records. In other words, we only examined parasites that had been recorded more than 50 times, but these occurrences could be on fewer than 50 host species. The inclusion of duplicate occurrences was only permitted if the parasite was recorded on a host in a different location, based on latitude and longitude values. Our response variable was parasite occurrence (binary), and was predicted using only host life history traits, and geographic location of host capture. Host trait information was obtained through the FishPest database [@strona2012; @strona2013], and FishBase [@froese2010]. Host traits descriptions are provided in Table 1
  
  
 ### Model formulation 
@@ -70,14 +65,16 @@ Here, I apply a series of predictive models in order to predict parasite occurre
 ### Strona's FishPest database
 
 ```{r, eval=FALSE, echo=TRUE, message=FALSE}
-load('/media/drakelab/Lexar/8910Project/Analysis/pest.Rdata')
-library(rfishbase); library(gbm); library(ROCR); library(e1071); library(randomForest)
+#load('/media/drakelab/Lexar/8910Project/Analysis/pest.Rdata')
+
 ## Creating a `fishMatrix` equiv.
 #edgePest=edge2matrix(cbind(pest[,'H_SP'], pest[,'P_SP']))
 #colnames(edgePest)=unique(pest[,'P_SP'])
 #rownames(edgePest)=unique(pest[,'H_SP'])
 #edgePest=edgePest[,-which(colSums(edgePest) < 50)]
 
+
+library(rfishbase); library(gbm); library(ROCR); library(e1071); library(randomForest)
 # storage for model outputs
 baseline.auc=vector(); 
 brtModel=list(); brt.best.iter=list(); brt.preds=list(); brt.perf=list(); brt.perfAUC=vector()
@@ -89,12 +86,13 @@ rfModel=list(); rf.preds=list(); rf.perf=list(); rf.perfAUC=vector()
 ## Creating a pointsObject
 #hostPest = unique(pest[,-c(1:3)], MARGIN=1)
 hostPest = pest[,-c(1:3)]
-parPest = names(summary(pest[,'P_SP'])>50); parPest=parPest[-100]
+parPest = names(summary(pest[,'P_SP'], maxsum=500)>20); 
+parPest=parPest[-max(length(parPest))]
+
+
 
 ret=list()
-reps=20
-for(z in 1:reps){
-  for(i in 1:length(parPest)){
+for(i in 1:length(parPest)){
 #create presence vector
   presence=rep(0, nrow(hostPest))
   presence[which(hostPest[,'P_SP'] == parPest[i])]=1
@@ -109,25 +107,31 @@ for(z in 1:reps){
   presence1=presence[cutDown]
   dat=hostPest[cutDown, -c(1,5)]
 
-  # This makes sure that the test set contains at least 4 hosts on which the parasite actually occurs
-  inds=sample(1:nrow(dat), 0.7*nrow(dat))
-  if(sum(presence1[inds]) < 4){inds[1:4] = which(presence1 == 1)[1:4]}
-  
 #Impute the data
   impDat=rfImpute(dat[,-c(1:3)], presence1)
   dat=impDat[,-1]
 
-#Set up a train set and a test set
+flag=0
+ while(flag == 0){
+  # This makes sure that the test set contains at least 4 hosts on which the parasite actually occurs
+  inds=sample(1:nrow(dat), 0.7*nrow(dat))
+  if(sum(presence1[inds]) < 4){inds[1:4] = which(presence1 == 1)[1:4]}
+
+  #Set up a prelim train set and a test set
   train = dat[inds,]
-  test = dat[-inds,]
+  test = dat[-inds,]  
+  if(all(unique(train$GEO) %in% unique(test$GEO))){flag=1}
+ }
+ 
+ #Presences
+  prezTR=presence1[inds]
+  prezTE=presence1[-inds]
+
   
   #baseline expectations and null models
   baseline.auc[i] = performance(prediction(sample(presence[-inds], length(presence[-inds])), presence[-inds]), 'auc')@y.values
    
  ##trained models
- prezTR=presence1[inds]
- prezTE=presence1[-inds]
-
   #boosted regression trees
     brtModel[[i]] = gbm(prezTR ~ ., data=train, n.trees=50000, interaction.depth=4, distribution='bernoulli')
     brt.best.iter[[i]] = gbm.perf(brtModel[[i]], method="OOB")
@@ -155,18 +159,31 @@ for(z in 1:reps){
   print(i)
   }
 
- ret[[z]]=cbind(baseline.auc, brt.perfAUC, svm.perfAUC, lr.perfAUC, rf.perfAUC)
- colnames(ret[[z]])=c('BASE', 'BRT', 'SVM', 'LR', 'RF')
- }
+ ret=cbind(baseline.auc[1:241], brt.perfAUC[1:241], svm.perfAUC[1:241], lr.perfAUC[1:241], rf.perfAUC[1:241])
+ colnames(ret)=c('BASE', 'BRT', 'SVM', 'LR', 'RF')
+ 
  
 ```
 
+```{r, eval=FALSE, echo=FALSE}
+#Extracting the BRT predictor variable importance values
+
+brtResults=matrix(0, ncol=length(brtModel), nrow=12)
+for(i in 1:length(brtModel)){
+  temp=summary(brtModel[[i]])
+  brtResults[,i]=temp[order(temp[,1]),2]
+}
+rownames(brtResults) = sort(temp[,1])
+```
 
 
-```{r eval=F, echo=FALSE}
-meanAUC = colMeans(ret[[1]])
-meanSE = apply(ret[[1]], 2, sd) / sqrt(nrow(ret[[1]]))
-meanSD = apply(ret[[1]], 2, sd)
+```{r eval=T, echo=T}
+load('/media/drakelab/Lexar/8910Project/Analysis/pest(reduced).RData')
+testRet=as.matrix(ret)
+testRet=apply(testRet,2, as.numeric )
+meanAUC = colMeans(testRet)
+meanSE = apply(testRet, 2, sd) / sqrt(nrow(testRet))
+meanSD = apply(testRet, 2, sd)
   
 plot(1:5, meanAUC, ylim=c(0.45, 1), xlim=c(0.5,5.5), las=1, pch=16, tck=0.01, xaxt='n', xlab='Predictive model used', ylab='Area Under ROC curve')
 abline(h=0.5, col=grey(0.5), lty=2, lwd=2)
@@ -174,6 +191,57 @@ segments(x0=1:5, y0=meanAUC+meanSD, y1=meanAUC-meanSD, col=grey(0.8),lwd=2)
 points(1:5, meanAUC, pch=16, cex=1.5)
 axis(1, at=1:5, labels=c('Base', 'BRT', 'SVM', 'LR', 'RF'), tck=0.01, srt=30)
 
+```
+
+
+
+
+### Does predictive power differ systematically among parasites?
+
+```{r eval=F, echo=T}
+rownames(testRet) = parPest[1:241]
+
+#Number of hosts each parasite infects
+hostNum = summary(pest[,'P_SP'])[1:99]
+
+#Beating the data up to get parasite 'type' 
+parType = unique(pest[which(pest[,'P_SP']%in% parPest), 2:4], MARGIN=1)
+parType[,1] = gsub('[*]','',parType[,1])
+parType = unique(parType, MARGIN=1)
+parType = parType[order(parType[,3]),]
+
+```
+
+
+### Are parasite distributions shaped by different factors?
+
+```{r eval=T, echo=T}
+varNames=c('Geographic region', 'Area of occupancy', 'Latitude', 'Max length', 'Host trophic level', 'Longitude', 'Host age at maturity', 'Host life span', 'Host growth rate', 'Marine', 'Freshwater', 'Brackish')
+#rownames(brtResults[rev(inds),])
+
+
+brtMean = rowMeans(brtResults)
+brtSE = apply(brtResults, 1, sd) / sqrt(ncol(brtResults))
+brtSD = apply(brtResults, 1, sd)
+
+inds=order(brtMean)
+cols=rev(c(1,1,1,2,2,1,2,2,2,2,2,2))
+par(mar=c(3,9,1,1))
+plot(brtMean[inds], 1:12, pch=16, xlim=c(0,26), ylim=c(0.5,12.5), las=1, xlab='', ylab='', yaxt='n', col=cols, tck=0.01)
+segments(x0=brtMean[inds] - brtSE[inds], x1=brtMean[inds] + brtSE[inds], y0=1:12, col=cols,lwd=3)
+mtext("Relative contribution", side=1, line=2)
+axis(2, at=1:12, labels=rev(varNames), las=1)
+```
+
+
+
+
+```{r eval=T, echo=T, fig.width=9}
+layout(matrix(c(1,2),ncol=1), heights=c(1.5, 1))
+par(mar=c(0.25,0.25,0.25,0.25))
+barplot(brtResults[rev(inds),], col=rainbow(15), xaxt='n', axes=FALSE, border = NA)
+plot.new()
+legend(0.02,0.85,varNames , pch=16, col=rainbow(15), ncol=4, pt.cex=2, text.width=0.2)
 ```
 
 
@@ -217,6 +285,8 @@ Table 2: Details for parasites modeled, including number of occurrences, and lif
 
 ```{r, message=FALSE, eval=FALSE, echo=FALSE}
 #### DEPRECATED CODE #### 
+#load('/media/drakelab/Lexar/8910Project/Analysis/fishParty(reduced).RData')
+#load('/media/drakelab/Lexar/8910Project/Analysis/fishParty.RData')
 # list of imputed data matrices
 m.imputedData=list()
 
