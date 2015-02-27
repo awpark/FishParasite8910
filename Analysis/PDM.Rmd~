@@ -15,7 +15,6 @@ bibliography: carp.bib
 ```{r echo=FALSE, message=FALSE, comment=FALSE}
 ## Load in some data and required packages
 library(rfishbase); library(gbm); library(ROCR); library(e1071); library(randomForest)
-
 ```
 
 
@@ -33,7 +32,7 @@ What constrains the range of hosts that a parasite can infect? Is there a simple
 
 ### Thesis paragraph
 
-Here, I apply a series of predictive models in order to predict parasite occurrence across a range of potential host species for a large set of parasites of freshwater fish, using host functional traits, and geographic location. I examine the role of parasite group (Acanthocephala, Cestoda, Monogenea, Nematoda, Trematoda) on model performance, and on the relative contribution of different variables to prediction. 
+Here, I apply a series of predictive models in order to predict parasite occurrence across a range of potential host species for a large set of parasites of freshwater fish, using host functional traits, and geographic location. 
 
 
 
@@ -76,6 +75,8 @@ Here, I apply a series of predictive models in order to predict parasite occurre
 #rownames(edgePest)=unique(pest[,'H_SP'])
 #edgePest=edgePest[,-which(colSums(edgePest) < 50)]
 
+
+library(rfishbase); library(gbm); library(ROCR); library(e1071); library(randomForest)
 # storage for model outputs
 baseline.auc=vector(); 
 brtModel=list(); brt.best.iter=list(); brt.preds=list(); brt.perf=list(); brt.perfAUC=vector()
@@ -219,17 +220,6 @@ for(i in 1:length(stupid)){
 ```
 
 
-```{r}
-par(mar=c(8,4,0.25,0.25))
-hostCol=c('#9367B1', '#20C0D0','#719240', grey(0.5), '#D9437E')
-plot(as.factor(parType[,1]), testRet[,2], col=hostCol, pch=16, las=1, ylab='Accuracy (AUC)', xaxt='n')
-parGroups=c('Acanthocephala', 'Cestoda', 'Monogenea', 'Nematoda', 'Trematoda')
-axis(1, 1:5, parGroups, las=2, tck=0.01, padj=0)
-```
-
-
-
-
 ### Are parasite distributions shaped by different factors?
 
 ```{r eval=T, echo=T}
@@ -251,6 +241,8 @@ axis(2, at=1:12, labels=rev(varNames), las=1)
 ```
 
 
+
+
 ```{r eval=T, echo=T, fig.width=9}
 layout(matrix(c(1,2),ncol=1), heights=c(1.5, 1))
 par(mar=c(0.25,0.25,0.25,0.25))
@@ -258,32 +250,6 @@ barplot(brtResults[rev(inds),], col=rainbow(15), xaxt='n', axes=FALSE, border = 
 plot.new()
 legend(0.02,0.85,varNames , pch=16, col=rainbow(15), ncol=4, pt.cex=2, text.width=0.2)
 ```
-
-
-
-### Is this variation attributable to parasite type?
-
-```{r fig.width=10}
-
-layout(matrix(c(1,2),ncol=1), heights=c(1.5, 1))
-par(mar=c(0.25,0.25,0.25,0.25))
-
-brtResults.ParType=brtResults[,order(parType[,1])]
-
-barplot(brtResults.ParType, col=rainbow(15), xaxt='n', axes=FALSE, border = NA)
-abline(v=c(30,66,81,120,241)*1.199, lwd=4)
-plot.new()
-text(15/241, 1 , parGroups[1],srt=0)
-text(50/241, 1, parGroups[2], srt=0)
-text(75/241, 0.95, parGroups[3], srt=0)
-text(105/241, 1, parGroups[4], srt=0)
-text(180/241, 1, parGroups[5], srt=0)
-
-
-legend(0.02,0.85,varNames , pch=16, col=rainbow(15), ncol=4, pt.cex=2, text.width=0.2)
-```
-
-
 
 
 ## Results
@@ -321,17 +287,6 @@ Table 2: Details for parasites modeled, including number of occurrences, and lif
 
 
 
-```{r, eval=F, echo=F}
-### Does the number of hosts infected influence the relative contribution values from the boosted regression tree analysis? (no).
-
-layout(matrix(c(1,2),ncol=1), heights=c(1.5, 1))
-par(mar=c(0.25,0.25,0.25,0.25))
-barplot(brtResults[,order(hostNum)], col=rainbow(15), xaxt='n', axes=FALSE, border = NA)
-plot.new()
-legend(0.02,0.85,varNames , pch=16, col=rainbow(15), ncol=4, pt.cex=2, text.width=0.2)
-
-
-```
 
 
 
