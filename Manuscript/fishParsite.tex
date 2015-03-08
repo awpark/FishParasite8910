@@ -34,6 +34,15 @@
 
 \section{Abstract}
 
+\textbf{Take-home messages} \\
+\begin{enumerate}
+ \item It is possible to predict parasite niche breadth using either host traits/geographic location, or parasite community similarity (best). 
+ \item Predictive accuracy does not vary as a function of host specificity (though I only consider parasites with 20 or more occurrence records, but these could all be on the same host species).
+ \item It may be possible to predict parasite spillover from invasive hosts to native host communities, or to predict biotic resistance of a community to invasion. 
+ 
+\end{enumerate}
+
+
 
 \section{Keywords}
 
@@ -41,16 +50,31 @@
 
 \section{Introduction}
  
+What has been done in fish parasite stuff? Cite some Kennedy, some Poulin, and then talk about what Strona has done with regards to predicting parasite co-occurrence. Point out that his predictive power wasn't great, and that co-occurrence is a different question from predicting parasite niche breadth. Discuss the differences in my approach from Strona's approach, and set up the question as both a prediction question, and a ``what's important'' question. Specifically, I trained models on geographic variables and host traits, and on just parasite information. Parasite information performed better, regardless of geographic information exclusion. This suggests that patch quality and geographic location may not matter as much as the existing community of parasites you harbor. In other words, prediction is better when only considering the parasite community of a host, rather than anything about the host. 
+
 
 
  \paragraph{Knowledge gap}
 
-What constrains the range of hosts that a parasite can infect? Is there a simple range of host functional traits that can determine the likelihood that a parasite infects a given host species? How well can we predict parasite occurrences given \textit{only} host life history traits? Does the importance of different host functional traits differ with parasite type?
+What constrains the range of hosts that a parasite can infect? Is there a simple range of host functional traits that can determine the likelihood that a parasite infects a given host species? How well can we predict parasite occurrences given \textit{only} host life history traits? How about using solely information on parasite community structure? 
+
+
+
+
+Does the importance of different host functional traits or parasite community information differ with parasite type? (supplement)
+
+Since geographic variables are important, what if we try to predict parasite niche breadth in a specific biogeographic region? (supplement)
+
+
  
  \paragraph{Thesis}
  
- Here, I apply a series of predictive models in order to predict parasite occurrence across a range of potential host species for a large set of parasites of freshwater fish, using host functional traits, and geographic location. I examine the role of parasite group (Acanthocephala, Cestoda, Monogenea, Nematoda, Trematoda) on model performance, and on the relative contribution of different variables to prediction. 
- 
+Here, I apply a series of predictive models in order to predict parasite occurrence across a range of potential host species for a large set of parasites of freshwater fish, using host functional traits, geographic location, and parasite community information. Parasite occurrence on a given host could be constrained by space (geographic location), patch quality (host characteristics), or through interactions with competing parasites (parasite community structure). It's important to note right up front that the importance of parasite community structure cannot be interpreted as evidence for community interactions, as parasites could infect hosts based on their traits, and the parasite community information could just be serving as a proxy for unmeasured host trait variation. However, predicting parasite occurrence based solely on parasite community information does remove some importance of the patch (host), and is easy to sell, as it may be possible to predict spillover of parasites, or the degree of biotic resistance a community offers to a potential invader, simply by having presence-absence data on parasite communities. 
+
+
+
+
+
 \section{Methods}
 
  \paragraph{Data and processing}
@@ -65,10 +89,11 @@ What constrains the range of hosts that a parasite can infect? Is there a simple
  \paragraph{Model formulation}
   We trained a series of models in order to compare predictive performance of different techniques. Each model was trained on 70\% of the data, and accuracy was determined from the remaining 30\%. We generated background data by randomly sampling host species where parasite $i$ was not recorded. To maintain proportional training data, the number of random samples was selected to be five times greater than the occurrence records. 
   
+  
  \paragraph{Models used}
  Discuss null predictions scenario, and then go into other algorithms used (brt, svm, lr, rf)
 
-
+\texttt{Or do I focus on BRT? BRT is a bit old hat. Perhaps I could report on BRT, but include analyses with SVM, LR, and RF in the supplement?}
 
 
 
@@ -76,6 +101,8 @@ What constrains the range of hosts that a parasite can infect? Is there a simple
  
   
 \section{Results}
+
+
 
   
   
@@ -93,7 +120,7 @@ What constrains the range of hosts that a parasite can infect? Is there a simple
 \section{Acknowledgements}
 
 \bibliographystyle{plainnat}
-\bibliography{}
+\bibliography{carp.bib}
 
 
 \newpage
@@ -132,21 +159,20 @@ Longitude           & degrees &         & 1 -- 359 ????? \\
 
 \begin{figure}[h!]
  %\includegraphics[width=.5\textwidth]{Figures/}
-  \caption{ }
+  \caption{Image plot with brt model results sorted by parasite type.  }
  \label{fig:a}
  \end{figure}
 
 
  \begin{figure}[h!]
  %\includegraphics[width=.5\textwidth]{Figures/}
-  \caption{ }
+  \caption{BRT RC contributions for each variable, or some kind of plot comparing the results from models trained with host traits/geography, and those trained with parasite community measures? }
  \label{fig:b}
  \end{figure}
 
  \begin{figure}[h!]
  %\includegraphics[width=.5\textwidth]{Figures/}
-  \caption{
- }
+  \caption{ }
  \label{fig:c}
  \end{figure}
 

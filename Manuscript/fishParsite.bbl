@@ -1,8 +1,25 @@
-\begin{thebibliography}{0}
+\begin{thebibliography}{3}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Froese and Pauly(2010)]{froese2010}
+Rainer Froese and Daniel Pauly.
+\newblock Fishbase, 2010.
+
+\bibitem[Strona and Lafferty(2012)]{strona2012}
+Giovanni Strona and Kevin~D Lafferty.
+\newblock {FishPEST}: an innovative software suite for fish parasitologists.
+\newblock \emph{Trends in parasitology}, 28\penalty0 (4):\penalty0 123, 2012.
+
+\bibitem[Strona et~al.(2013)Strona, Palomares, Bailly, Galli, and
+  Lafferty]{strona2013}
+Giovanni Strona, Maria Lourdes~D Palomares, Nicolas Bailly, Paolo Galli, and
+  Kevin~D Lafferty.
+\newblock Host range, host ecology, and distribution of more than 11 800 fish
+  parasite species: Ecological archives e094-045.
+\newblock \emph{Ecology}, 94\penalty0 (2):\penalty0 544--544, 2013.
 
 \end{thebibliography}
