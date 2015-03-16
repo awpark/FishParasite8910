@@ -15,9 +15,8 @@ bibliography: carp.bib
 ```{r echo=FALSE, message=FALSE, comment=FALSE}
 ## Load in some data and required packages
 library(rfishbase); library(gbm); library(ROCR); library(e1071); library(randomForest)
-load('/media/drakelab/Lexar/8910Project/Analysis/pest(reduced).RData')
-load('/media/drakelab/Lexar/8910Project/Analysis/pest(reduced)_abc.RData')
-
+load('/media/drakelab/Lexar/8910Project/Analysis/RdataFiles/pest(reduced).RData')
+load('/media/drakelab/Lexar/8910Project/Analysis/RdataFiles/pest(reduced)2_1.RData')
 ```
 
 
@@ -70,7 +69,7 @@ I examine the role of parasite group (Acanthocephala, Cestoda, Monogenea, Nemato
 
 ```{r, eval=FALSE, echo=TRUE, message=FALSE}
 # storage for model outputs
-baseline.auc=vector(); 
+baseline.auc=vector(); aso.auc=vector()
 brtModel=list(); brt.best.iter=list(); brt.preds=list(); brt.perf=list(); brt.perfAUC=vector()
 svmModel=list(); svm.preds=list(); svm.perf=list(); svm.perfAUC=vector()
 lrModel=list(); lr.preds=list(); lr.perf=list(); lr.perfAUC=vector()
@@ -79,7 +78,7 @@ rfModel=list(); rf.preds=list(); rf.perf=list(); rf.perfAUC=vector()
 
 ## Creating a pointsObject
 #hostPest = unique(pest[,-c(1:3)], MARGIN=1)
-hostPest = pest[,-c(1:3)]
+hostPest = pest[,c(4:8, 10:14)]
 parPest = names(which(summary(pest1[,'P_SP'], maxsum=500)>20)); 
 parPest=parPest[-max(length(parPest))]
 
@@ -92,7 +91,7 @@ for(i in 1:length(parPest)){
 #make some 'na' into actual NAs
   ugh=which(hostPest=='na', arr.ind=TRUE)
   hostPest[ugh]=NA
-  hostPest[,7:17]=apply(hostPest[,7:17],2, as.numeric)
+  hostPest[,6:10]=apply(hostPest[,6:10],2, as.numeric)
 
 
 #Only train on some of the absences, since they're totally not true absences
@@ -106,6 +105,98 @@ for(i in 1:length(parPest)){
   dat=impDat[,-1]
 
 
+  # This makes sure that the test set contains at least 4 hosts on which the parasite actually occurs
+  inds=sample(1:nrow(dat), 0.7*nrow(dat))
+  if(sum(presence1[inds]) < 4){inds[1:4] = which(presence1 == 1)[1:4]}
+
+  #Set up a prelim train set and a test set
+  train = dat[inds,]
+  test = dat[-inds,]  
+ 
+ #Presences
+  prezTR=presence1[inds]
+  prezTE=presence1[-inds]
+
+#baseline expectations and null models
+  baseline.auc[i] = performance(prediction(sample(presence[-inds], length(presence[-inds])), presence[-inds]), 'auc')@y.values
+   
+  # A single occurrence prediction
+  aso.auc[i]= unlist(performance(prediction(c(1,rep(0, length(prezTE)-1)), prezTE), 'auc')@y.values)
+
+ ##trained models
+  #boosted regression trees
+    brtModel[[i]] = gbm(prezTR ~ ., data=train, n.trees=50000, interaction.depth=4, distribution='bernoulli')
+    brt.best.iter[[i]] = gbm.perf(brtModel[[i]], method="OOB")
+    brt.preds[[i]] = prediction(predict(brtModel[[i]], newdata=test, n.trees=brt.best.iter[[i]]), prezTE)
+    brt.perf[[i]] = performance(brt.preds[[i]],"tpr","fpr")
+    brt.perfAUC[i]=unlist(performance(brt.preds[[i]], 'auc')@y.values)
+
+  #support vector machines
+    svmModel[[i]] = svm(prezTR ~ ., data=train, probability=TRUE, kernal='radial')
+    svm.preds[[i]] = prediction(predict(svmModel[[i]], test), prezTE)
+    svm.perf[[i]] = performance(svm.preds[[i]],"tpr","fpr")
+    svm.perfAUC[i] = unlist(performance(svm.preds[[i]], 'auc')@y.values)
+
+  #logistic regression
+    lrModel[[i]] = glm(prezTR ~ ., data=train, family=binomial)
+    lr.preds[[i]] = prediction(predict(lrModel[[i]], test), prezTE)
+    lr.perf[[i]] = performance(lr.preds[[i]],"tpr","fpr")
+    lr.perfAUC[i] = unlist(performance(lr.preds[[i]], 'auc')@y.values)
+
+  #random forest
+    rfModel[[i]] = randomForest(prezTR ~ ., data=train)
+    rf.preds[[i]] = prediction(predict(rfModel[[i]], test), prezTE)
+    rf.perf[[i]] = performance(rf.preds[[i]],"tpr","fpr")
+    rf.perfAUC[i] = unlist(performance(rf.preds[[i]], 'auc')@y.values)
+  print(i)
+  }
+
+ ret=cbind(baseline.auc, aso.auc, brt.perfAUC, svm.perfAUC, lr.perfAUC, rf.perfAUC)
+ colnames(ret)=c('BASE', 'Zero', 'BRT', 'SVM', 'LR', 'RF')
+```
+
+
+
+
+
+#### Training using only geographic
+
+```{r, eval=FALSE, echo=TRUE, message=FALSE}
+# storage for model outputs
+baseline.auc.geo=vector(); aso.auc.geo=vector()
+brtModel.geo=list(); brt.best.iter.geo=list(); brt.preds.geo=list(); brt.perf.geo=list(); brt.perfAUC.geo=vector()
+svmModel.geo=list(); svm.preds.geo=list(); svm.perf.geo=list(); svm.perfAUC.geo=vector()
+lrModel.geo=list(); lr.preds.geo=list(); lr.perf.geo=list(); lr.perfAUC.geo=vector()
+rfModel.geo=list(); rf.preds.geo=list(); rf.perf.geo=list(); rf.perfAUC.geo=vector()
+
+
+## Creating a pointsObject
+#hostPest = unique(pest[,-c(1:3)], MARGIN=1)
+hostPest = pest[,c(4:9, 18:20)]
+parPest = names(which(summary(pest[,'P_SP'], maxsum=500)>19)); 
+parPest=parPest[-max(length(parPest))]
+
+
+for(i in 226:length(parPest)){
+#create presence vector
+  presence=rep(0, nrow(hostPest))
+  presence[which(hostPest[,'P_SP'] == parPest[i])]=1
+
+#make some 'na' into actual NAs
+  ugh=which(hostPest=='na', arr.ind=TRUE)
+  hostPest[ugh]=NA
+  hostPest[,7:9]=apply(hostPest[,7:9],2, as.numeric)
+
+
+#Only train on some of the absences, since they're totally not true absences
+  cutDown=c(which(presence==1), sample(which(presence==0), 5*sum(presence)))
+  presence1=presence[cutDown]
+  dat=hostPest[cutDown, -c(1:4)]
+  hostsOfi=dat[,1]
+  
+#Impute the data
+  impDat=rfImpute(dat[,-1], presence1)
+  dat=impDat[,-1]
 
 flag=0
  while(flag == 0){
@@ -125,52 +216,46 @@ flag=0
 
   
   #baseline expectations and null models
-  baseline.auc[i] = performance(prediction(sample(presence[-inds], length(presence[-inds])), presence[-inds]), 'auc')@y.values
+  baseline.auc.geo[i] = performance(prediction(sample(presence[-inds], length(presence[-inds])), presence[-inds]), 'auc')@y.values
    
+  # A single occurrence prediction
+  aso.auc.geo[i]= unlist(performance(prediction(c(1,rep(0, length(prezTE)-1)), prezTE), 'auc')@y.values)
+
  ##trained models
   #boosted regression trees
-    brtModel[[i]] = gbm(prezTR ~ ., data=train, n.trees=50000, interaction.depth=4, distribution='bernoulli')
-    brt.best.iter[[i]] = gbm.perf(brtModel[[i]], method="OOB")
-    brt.preds[[i]] = prediction(predict(brtModel[[i]], newdata=test, n.trees=brt.best.iter[[i]]), prezTE)
-    brt.perf[[i]] = performance(brt.preds[[i]],"tpr","fpr")
-    brt.perfAUC[i]=unlist(performance(brt.preds[[i]], 'auc')@y.values)
+    brtModel.geo[[i]] = gbm(prezTR ~ ., data=train, n.trees=50000, interaction.depth=4, distribution='bernoulli')
+    brt.best.iter.geo[[i]] = gbm.perf(brtModel.geo[[i]], method="OOB")
+    brt.preds.geo[[i]] = prediction(predict(brtModel.geo[[i]], newdata=test, n.trees=brt.best.iter.geo[[i]]), prezTE)
+    brt.perf.geo[[i]] = performance(brt.preds.geo[[i]],"tpr","fpr")
+    brt.perfAUC.geo[i]=unlist(performance(brt.preds.geo[[i]], 'auc')@y.values)
 
   #support vector machines
-    svmModel[[i]] = svm(prezTR ~ ., data=train, probability=TRUE)
-    svm.preds[[i]] = prediction(predict(svmModel[[i]], test), prezTE)
-    svm.perf[[i]] = performance(svm.preds[[i]],"tpr","fpr")
-    svm.perfAUC[i] = unlist(performance(svm.preds[[i]], 'auc')@y.values)
+    svmModel.geo[[i]] = svm(prezTR ~ ., data=train, probability=TRUE, kernal='radial')
+    svm.preds.geo[[i]] = prediction(predict(svmModel.geo[[i]], test), prezTE)
+    svm.perf.geo[[i]] = performance(svm.preds.geo[[i]],"tpr","fpr")
+    svm.perfAUC.geo[i] = unlist(performance(svm.preds.geo[[i]], 'auc')@y.values)
 
   #logistic regression
-    lrModel[[i]] = glm(prezTR ~ ., data=train, family=binomial)
-    lr.preds[[i]] = prediction(predict(lrModel[[i]], test), prezTE)
-    lr.perf[[i]] = performance(lr.preds[[i]],"tpr","fpr")
-    lr.perfAUC[i] = unlist(performance(lr.preds[[i]], 'auc')@y.values)
+    lrModel.geo[[i]] = glm(prezTR ~ ., data=train, family=binomial)
+    lr.preds.geo[[i]] = prediction(predict(lrModel.geo[[i]], test), prezTE)
+    lr.perf.geo[[i]] = performance(lr.preds.geo[[i]],"tpr","fpr")
+    lr.perfAUC.geo[i] = unlist(performance(lr.preds.geo[[i]], 'auc')@y.values)
 
   #random forest
-    rfModel[[i]] = randomForest(prezTR ~ ., data=train)
-    rf.preds[[i]] = prediction(predict(rfModel[[i]], test), prezTE)
-    rf.perf[[i]] = performance(rf.preds[[i]],"tpr","fpr")
-    rf.perfAUC[i] = unlist(performance(rf.preds[[i]], 'auc')@y.values)
+    rfModel.geo[[i]] = randomForest(prezTR ~ ., data=train)
+    rf.preds.geo[[i]] = prediction(predict(rfModel.geo[[i]], test), prezTE)
+    rf.perf.geo[[i]] = performance(rf.preds.geo[[i]],"tpr","fpr")
+    rf.perfAUC.geo[i] = unlist(performance(rf.preds.geo[[i]], 'auc')@y.values)
   print(i)
   }
 
- ret=cbind(baseline.auc[1:241], brt.perfAUC[1:241], svm.perfAUC[1:241], lr.perfAUC[1:241], rf.perfAUC[1:241])
- colnames(ret)=c('BASE', 'BRT', 'SVM', 'LR', 'RF')
+ ret.geo=cbind(baseline.auc.geo, aso.auc.geo, brt.perfAUC.geo, svm.perfAUC.geo, lr.perfAUC.geo, rf.perfAUC.geo)
+ colnames(ret.geo)=c('BASE', 'Zero', 'BRT', 'SVM', 'LR', 'RF')
 ```
 
 
 
 
-```{r, eval=FALSE, echo=FALSE}
-#Extracting the BRT predictor variable importance values
-brtResults=matrix(0, ncol=length(brtModel), nrow=12)
-for(i in 1:length(brtModel)){
-  temp=summary(brtModel[[i]])
-  brtResults[,i]=temp[order(temp[,1]),2]
-}
-rownames(brtResults) = sort(temp[,1])
-```
 
 
 
@@ -181,6 +266,7 @@ rownames(brtResults) = sort(temp[,1])
 ```{r, eval=FALSE, echo=TRUE, message=FALSE}
 # storage for model outputs
 baseline.auc.b=vector(); 
+aso.auc.b=vector() ;
 brtModel.b=list(); brt.best.iter.b=list(); brt.preds.b=list(); brt.perf.b=list(); brt.perfAUC.b=vector()
 svmModel.b=list(); svm.preds.b=list(); svm.perf.b=list(); svm.perfAUC.b=vector()
 lrModel.b=list(); lr.preds.b=list(); lr.perf.b=list(); lr.perfAUC.b=vector()
@@ -221,18 +307,13 @@ for(i in 1:length(parPest)){
 pcaHosts = princomp(intMat[,-which(colnames(intMat)==parPest[i])])$scores
 
 psrOut=vector()
-pcaHostsOut=matrix(0, nrow=length(hostsOfi), ncol=10)
+pcaHostsOut=matrix(0, nrow=length(hostsOfi), ncol=5)
 for(e in 1:length(hostsOfi)){
   psrOut[e] = psr[which(hostsOfi[e] == rownames(intMat))]
-  pcaHostsOut[e,] = pcaHosts[which(hostsOfi[e] == rownames(intMat)), 1:10]
+  pcaHostsOut[e,] = pcaHosts[which(hostsOfi[e] == rownames(intMat)), 1:5]
 }
 
-
-
 dat = data.frame(psrOut, pcaHostsOut)
-
-
-
 
   # This makes sure that the test set contains at least 4 hosts on which the parasite actually occurs
   inds=sample(1:nrow(dat), 0.7*nrow(dat))
@@ -246,11 +327,13 @@ dat = data.frame(psrOut, pcaHostsOut)
  #Presences
   prezTR=presence1[inds]
   prezTE=presence1[-inds]
-
   
   #baseline expectations and null models
   baseline.auc.b[i] = performance(prediction(sample(presence[-inds], length(presence[-inds])), presence[-inds]), 'auc')@y.values
-   
+ 
+# A single occurrence prediction
+  aso.auc.b[i]= performance(prediction(c(1,rep(0, length(prezTE)-1)), prezTE), 'auc')@y.values
+
  ##trained models
   #boosted regression trees
     brtModel.b[[i]] = gbm(prezTR ~ ., data=train, n.trees=50000, interaction.depth=4, distribution='bernoulli')
@@ -279,23 +362,19 @@ dat = data.frame(psrOut, pcaHostsOut)
   print(i)
   }
 
- ret.b=cbind(baseline.auc.b, brt.perfAUC.b, svm.perfAUC.b, lr.perfAUC.b, rf.perfAUC.b)
- colnames(ret.b)=c('BASE', 'BRT', 'SVM', 'LR', 'RF')
+ ret.b=cbind(baseline.auc.b, aso.auc.b, brt.perfAUC.b, svm.perfAUC.b, lr.perfAUC.b, rf.perfAUC.b)
+ colnames(ret.b)=c('BASE','Zero', 'BRT', 'SVM', 'LR', 'RF')
 ```
 
 
 
 
-
-
-
-
-
-#### Training using both parasite and host data
+#### Training using all data 
 
 ```{r, eval=FALSE, echo=TRUE, message=FALSE}
 # storage for model outputs
-baseline.auc.c=vector(); 
+baseline.auc.c=vector();
+aso.auc.c=vector()
 brtModel.c=list(); brt.best.iter.c=list(); brt.preds.c=list(); brt.perf.c=list(); brt.perfAUC.c=vector()
 svmModel.c=list(); svm.preds.c=list(); svm.perf.c=list(); svm.perfAUC.c=vector()
 lrModel.c=list(); lr.preds.c=list(); lr.perf.c=list(); lr.perfAUC.c=vector()
@@ -305,11 +384,12 @@ rfModel.c=list(); rf.preds.c=list(); rf.perf.c=list(); rf.perfAUC.c=vector()
 ## Creating a pointsObject
 #hostPest = unique(pest[,-c(1:3)], MARGIN=1)
 hostPest = pest[,-c(1:3)]
+hostPest[,7:17]=apply(hostPest[,7:17],2, as.numeric)
 parPest = names(which(summary(pest1[,'P_SP'], maxsum=500)>20)); 
 parPest=parPest[-max(length(parPest))]
 
 
-for(i in 1:length(parPest)){
+for(i in 229:length(parPest)){
 #create presence vector
   presence=rep(0, nrow(hostPest))
   presence[which(hostPest[,'P_SP'] == parPest[i])]=1
@@ -317,8 +397,6 @@ for(i in 1:length(parPest)){
 #make some 'na' into actual NAs
   ugh=which(hostPest=='na', arr.ind=TRUE)
   hostPest[ugh]=NA
-  hostPest[,7:17]=apply(hostPest[,7:17],2, as.numeric)
-
 
 #Only train on some of the absences, since they're totally not true absences
   cutDown=c(which(presence==1), sample(which(presence==0), 5*sum(presence)))
@@ -337,10 +415,10 @@ for(i in 1:length(parPest)){
  pcaHosts = princomp(intMat[,-which(colnames(intMat)==parPest[i])])$scores
 
 psrOut=vector()
-pcaHostsOut=matrix(0, nrow=length(hostsOfi), ncol=10)
+pcaHostsOut=matrix(0, nrow=length(hostsOfi), ncol=5)
 for(e in 1:length(hostsOfi)){
   psrOut[e] = psr[which(hostsOfi[e] == rownames(intMat))]
-  pcaHostsOut[e,] = pcaHosts[which(hostsOfi[e] == rownames(intMat)), 1:10]
+  pcaHostsOut[e,] = pcaHosts[which(hostsOfi[e] == rownames(intMat)), 1:5]
 }
 
 dat = data.frame(dat, psrOut, pcaHostsOut)
@@ -364,7 +442,9 @@ flag=0
   
   #baseline expectations and null models
   baseline.auc.c[i] = performance(prediction(sample(presence[-inds], length(presence[-inds])), presence[-inds]), 'auc')@y.values
-   
+  # A single occurrence prediction
+  aso.auc.c[i]= performance(prediction(c(1,rep(0, length(prezTE)-1)), prezTE), 'auc')@y.values
+
  ##trained models
   #boosted regression trees
     brtModel.c[[i]] = gbm(prezTR ~ ., data=train, n.trees=50000, interaction.depth=4, distribution='bernoulli')
@@ -393,8 +473,8 @@ flag=0
   print(i)
   }
 
- ret.c=cbind(baseline.auc.c, brt.perfAUC.c, svm.perfAUC.c, lr.perfAUC.c, rf.perfAUC.c)
- colnames(ret.c)=c('BASE', 'BRT', 'SVM', 'LR', 'RF')
+ ret.c=cbind(baseline.auc.c, aso.auc.c, brt.perfAUC.c, svm.perfAUC.c, lr.perfAUC.c, rf.perfAUC.c)
+ colnames(ret.c)=c('BASE', 'Zero', 'BRT', 'SVM', 'LR', 'RF')
 ```
 
 
@@ -404,18 +484,31 @@ flag=0
 
 ```{r, eval=FALSE, echo=FALSE}
 #Extracting the BRT predictor variable importance values
-brtResults.b=matrix(0, ncol=length(brtModel.b), nrow=11)
-brtResults.c=matrix(0, ncol=length(brtModel.c), nrow=23)
+brtResults.traits = matrix(0, ncol=length(brtModel), nrow = 5)
+brtResults.geo = matrix(0, ncol=length(brtModel), nrow = 4)
+brtResults.pars = matrix(0, ncol=length(brtModel), nrow = 6)
+brtResults.all = matrix(0, ncol=length(brtModel), nrow = 18)
 
-for(i in 1:length(brtModel.b)){
-  temp=summary(brtModel.b[[i]])
-  brtResults.b[,i]=temp[order(temp[,1]),2]
-  temp2=summary(brtModel.c[[i]])
-  brtResults.c[,i]=temp2[order(temp2[,1]),2]
+for(i in 1:length(brtModel)){
+  temp1=summary(brtModel[[i]])
+  brtResults.traits[,i]=temp1[order(temp1[,1]),2]
+  
+  temp2=summary(brtModel.geo[[i]])
+  brtResults.geo[,i]=temp2[order(temp2[,1]),2]
+  
+  temp3=summary(brtModel.b[[i]])
+  brtResults.pars[,i]=temp3[order(temp3[,1]),2]
+  
+  temp4=summary(brtModel.c[[i]])
+  brtResults.all[,i]=temp4[order(temp4[,1]),2]
+
+  print(i)
 }
 
-rownames(brtResults.b) = sort(temp[,1])
-rownames(brtReslts.c) = sort(temp2[,1])
+rownames(brtResults.traits) = sort(temp1[,1])
+rownames(brtResults.geo) = sort(temp2[,1])
+rownames(brtResults.pars) = sort(temp3[,1])
+rownames(brtResults.all) = sort(temp4[,1])
 ```
 
 
@@ -424,11 +517,25 @@ rownames(brtReslts.c) = sort(temp2[,1])
 
 
 
-```{r eval=T, echo=T, fig.width=10}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r eval=T, echo=T, fig.heigt=3.5, dev='pdf', fig.path='../Manuscript/Figures/BRTaccuracy.pdf', dpi=300}
 testRet=apply(as.matrix(ret), 2, as.numeric)
 testRetb=apply(as.matrix(ret.b),2, as.numeric)
 testRetc=apply(as.matrix(ret.c),2, as.numeric)
+testRetgeo=apply(as.matrix(ret.geo),2,as.numeric)
 
 meanAUC = colMeans(testRet)
 meanSE = apply(testRet, 2, sd) / sqrt(nrow(testRet))
@@ -442,7 +549,335 @@ meanAUC.c = colMeans(testRetc)
 meanSE.c = apply(testRetc, 2, sd) / sqrt(nrow(testRetc))
 meanSD.c = apply(testRetc, 2, sd)
 
+meanAUC.geo = colMeans(testRetgeo)
+meanSE.geo = apply(testRetgeo, 2, sd) / sqrt(nrow(testRetgeo))
+meanSD.geo = apply(testRetgeo, 2, sd)
 
+
+brt.meanAUC=c(meanAUC[3], meanAUC.geo[3],  meanAUC.b[3], meanAUC.c[3])
+brt.se=c(meanSE[3], meanSE.geo[3],  meanSE.b[3], meanSE.c[3])
+brt.sd=c(meanSD[3], meanSD.geo[3],  meanSD.b[3], meanSD.c[3])
+
+
+plot(1:4, brt.meanAUC, ylim=c(0.45, 1), xlim=c(0.7,4.3), las=1, pch=16, tck=0.01, xaxt='n', xlab='Predictive model used', ylab='Area Under ROC curve')
+
+abline(h=0.5, col=grey(0.5), lty=2, lwd=2)
+abline(v=3.5, col=grey(0.8), lwd=1.5)
+segments(x0=1:4, y0=brt.meanAUC + (brt.sd), y1=brt.meanAUC - (brt.sd), col=grey(0.8),lwd=2)
+
+points(1:4, brt.meanAUC, pch=16, cex=1)
+axis(1, at=1:4, labels=c('HT',  'GEO', 'PC', 'All'), tck=0.02, lwd=1)
+box()
+
+
+```
+
+
+
+
+
+
+### Does predictive power differ systematically among parasites?
+
+```{r eval=T, echo=T}
+rownames(testRet) = parPest[1:238]
+
+#Number of hosts each parasite infects
+hostNum = summary(pest[,'P_SP'])[1:238]
+
+#Beating the data up to get parasite 'type' 
+parType = unique(pest[which(pest[,'P_SP']%in% parPest[1:238]), 2:4], MARGIN=1)
+parType[,1] = gsub('[*]','',parType[,1])
+parType = unique(parType, MARGIN=1)
+parType = parType[order(parType[,3]),]
+
+# Hand-wavey solution to the problem of classifying parasites as two different classes of parasites 
+# (C and T, or A and M). 
+
+stupid=names(summary(parType[,3], maxsum=242)[1:3])
+for(i in 1:length(stupid)){
+  parType=parType[-which(parType[,3] %in% stupid[i])[1],]
+}
+
+```
+
+
+
+
+```{r eval=TRUE, echo=TRUE, fig.width=6, fig.height=6, dev='pdf', fig.path='../Manuscript/Figures/parAccuracy.pdf', dpi=300}
+layout(matrix(c(1,2,3,4), ncol=2), heights=c(1,1.5))
+
+hostCol=c('#9367B1', '#20C0D0','#719240', grey(0.5), '#D9437E')
+par(mar=c(1,4,2,0.25))
+plot(as.factor(parType[,1]), testRet[1:238,3], col=hostCol, pch=16, las=1, ylab='Accuracy (AUC)', xaxt='n', ylim=c(0.25,1), main="Host traits")
+
+par(mar=c(8,4,2,0.25))
+plot(as.factor(parType[,1]), testRetgeo[1:238,3], col=hostCol, pch=16, las=1, ylab='Accuracy (AUC)', xaxt='n', ylim=c(0.25,1), main="Geography")
+parGroups=c('Acanthocephala', 'Cestoda', 'Monogenea', 'Nematoda', 'Trematoda')
+axis(1, 1:5, parGroups, las=2, tck=0.01, padj=0)
+
+par(mar=c(1,4,2,0.25))
+plot(as.factor(parType[,1]), testRetb[1:238,3], col=hostCol, pch=16, las=1, ylab='', xaxt='n', ylim=c(0.25,1), main="Parasite community")
+
+par(mar=c(8,4,2,0.25))
+plot(as.factor(parType[,1]), testRetc[1:238,3], col=hostCol, pch=16, las=1, ylab='', xaxt='n', ylim=c(0.25,1), main="All")
+parGroups=c('Acanthocephala', 'Cestoda', 'Monogenea', 'Nematoda', 'Trematoda')
+axis(1, 1:5, parGroups, las=2, tck=0.01, padj=0)
+
+
+
+```
+
+
+
+
+### Are parasite distributions shaped by different factors?
+
+
+
+#### BRT model using only host traits 
+
+```{r eval=T, echo=T, dev='pdf', fig.path='../Manuscript/Figures/hostTraits.pdf', dpi=300}
+#varNames=c('Geographic region', 'Area of occupancy', 'Latitude', 'Max length', 'Host trophic level', 'Longitude', 'Host age at maturity', 'Host life span', 'Host growth rate', 'Marine', 'Freshwater', 'Brackish')
+
+brtMean = rowMeans(brtResults.traits)
+brtSE = apply(brtResults.traits, 1, sd) / sqrt(ncol(brtResults.traits))
+brtSD = apply(brtResults.traits, 1, sd)
+
+inds.a=order(brtMean)
+par(mar=c(3,9,1,1))
+plot(brtMean[inds.a], 1:5, pch=16, xlim=c(0,50), ylim=c(0.5,5.5), las=1, xlab='', ylab='', yaxt='n', col=1, tck=0.01)
+segments(x0=brtMean[inds.a] - brtSD[inds.a], x1=brtMean[inds.a] + brtSD[inds.a], y0=1:5, col=grey(0.5,0.5),lwd=3)
+mtext("Relative contribution", side=1, line=2)
+axis(2, at=1:5, labels=c('Host growth rate', 'Host age at maturity', 'Max host age', 'Host trophic level', 'Max length'), las=1)
+```
+
+
+```{r eval=T, echo=T, fig.width=9, dev='pdf', fig.path='../Manuscript/Figures/hostTraitsColor.pdf', dpi=300}
+layout(matrix(c(1,2),ncol=1), heights=c(1.5, 1))
+par(mar=c(0.25,0.25,0.25,0.25))
+barplot(brtResults.traits[inds.a,], col=rainbow(5), xaxt='n', axes=FALSE, border = NA)
+plot.new()
+legend(0.02,0.85, c('Host growth rate', 'Host age at maturity', 'Max host age', 'Host trophic level', 'Max length'), pch=16, col=rainbow(5), ncol=4, pt.cex=2, text.width=0.2)
+```
+
+
+#### BRT model using only geographic variables
+
+```{r eval=T, echo=T, dev='pdf', fig.path='../Manuscript/Figures/geography.pdf', dpi=300}
+varNames=c('Geographic region', 'Area of occupancy', 'Latitude', 'Max length', 'Host trophic level', 'Longitude', 'Host age at maturity', 'Host life span', 'Host growth rate', 'Marine', 'Freshwater', 'Brackish')
+#rownames(brtResults[rev(inds),])]
+
+brtMean = rowMeans(brtResults.geo)
+brtSE = apply(brtResults.geo, 1, sd) / sqrt(ncol(brtResults.geo))
+brtSD = apply(brtResults.geo, 1, sd)
+
+inds.a=order(brtMean)
+par(mar=c(3,9,1,1))
+plot(brtMean[inds.a], 1:4, pch=16, xlim=c(0,45), ylim=c(0.75,4.25), las=1, xlab='', ylab='', yaxt='n', col=1, tck=0.01)
+segments(x0=brtMean[inds.a] - brtSD[inds.a], x1=brtMean[inds.a] + brtSD[inds.a], y0=1:4, col=grey(0.5,0.5),lwd=3)
+mtext("Relative contribution", side=1, line=2)
+axis(2, at=1:4, labels=c('Latitude', 'Area of occupancy', 'Geographic region', 'Longitude'), las=1)
+
+```
+
+
+```{r eval=T, echo=T, fig.width=9, dev='pdf', fig.path='../Manuscript/Figures/geographyColor.pdf', dpi=300}
+layout(matrix(c(1,2),ncol=1), heights=c(1.5, 1))
+par(mar=c(0.25,0.25,0.25,0.25))
+barplot(brtResults.geo[inds.a,], col=rainbow(5), xaxt='n', axes=FALSE, border = NA)
+plot.new()
+legend(0.02,0.85, c('Latitude', 'Area of occupancy', 'Geographic region', 'Longitude'), pch=16, col=rainbow(5), ncol=2, pt.cex=2, text.width=0.3)
+```
+
+
+
+
+
+#### BRT models using only parasite community data (parasite species richness and a PCA of parasite community composition)
+
+```{r eval=T, echo=T, dev='pdf', fig.path='../Manuscript/Figures/parasiteCommunity.pdf', dpi=300}
+brtMean.b = rowMeans(brtResults.pars)
+brtSE.b = apply(brtResults.pars, 1, sd) / sqrt(ncol(brtResults.pars))
+brtSD.b = apply(brtResults.pars, 1, sd)
+
+inds=order(brtMean.b)
+par(mar=c(3,7,1,1))
+plot(brtMean.b[inds], 1:6, pch=16, xlim=c(0,26), ylim=c(0.75,6.25), las=1, xlab='', ylab='', yaxt='n', col=1, tck=0.01)
+segments(x0=brtMean.b[inds] - brtSE.b[inds], x1=brtMean.b[inds] + brtSE.b[inds], y0=1:6, col=grey(0.5, alpha=0.5),lwd=3)
+mtext("Relative contribution", side=1, line=2)
+axis(2, at=1:6, labels=rev(c('PCA2', 'PCA3', 'PCA5', 'PCA4', 'PCA1', 'PSR')), las=1)
+
+
+```
+
+
+```{r eval=T, echo=T, fig.width=9, dev='pdf', fig.path='../Manuscript/Figures/parasiteCommunityColor.pdf', dpi=300}
+layout(matrix(c(1,2),ncol=1), heights=c(2.5, 1))
+par(mar=c(0.25,0.25,0.25,0.25))
+barplot(brtResults.pars[inds,], col=rainbow(6), xaxt='n', axes=FALSE, border = NA)
+plot.new()
+legend(0.02,0.85, rev(c('PCA2', 'PCA3', 'PCA5', 'PCA4', 'PCA1', 'PSR')), pch=16, col=rainbow(6), ncol=3, pt.cex=2, text.width=0.2)
+```
+
+
+
+
+#### BRT models trained on all data
+
+```{r eval=T, echo=T, fig.height=6, dev='pdf', fig.path='../Manuscript/Figures/allData.pdf', dpi=300}
+brtMean.c = rowMeans(brtResults.all)
+brtSE.c = apply(brtResults.all, 1, sd) / sqrt(ncol(brtResults.all))
+brtSD.c = apply(brtResults.all, 1, sd)
+
+inds=order(brtMean.c)
+par(mar=c(3,9,1,1))
+plot(brtMean.c[inds], 1:18, pch=16, xlim=c(0,18), ylim=c(0.75,18.25), las=1, xlab='', ylab='', yaxt='n', col=1, tck=0.01)
+segments(x0=brtMean.c[inds] - brtSE.c[inds], x1=brtMean.c[inds] + brtSE.c[inds], y0=1:18, col=grey(0.5, alpha=0.5),lwd=3)
+mtext("Relative contribution", side=1, line=2)
+axis(2, at=1:18, labels=c('Brackish', 'Marine', 'Freshwater', 'Host growth rate', 'Lifespan', 'Host age at maturity', 'PSR', 'Longitude', 'Area of occupancy', 'Max length', 'Latitude', 'Host trophic level', 'PCA1', 'PCA4', 'PCA5', 'PCA2', 'Geographic region', 'PCA3'),las=1)
+```
+
+
+```{r eval=T, echo=T, fig.width=9, dev='pdf', fig.path='../Manuscript/Figures/allDataColor.pdf', dpi=300}
+layout(matrix(c(1,2),ncol=1), heights=c(2.5, 1))
+par(mar=c(0.25,0.25,0.25,0.25))
+barplot(brtResults.all[inds,], col=rainbow(20), xaxt='n', axes=FALSE, border = NA)
+plot.new()
+legend(0.02,0.85, c('Brackish', 'Marine', 'Freshwater', 'Host growth rate', 'Lifespan', 'Host age at maturity', 'PSR', 'Longitude', 'Area of occupancy', 'Max length', 'Latitude', 'Host trophic level', 'PCA1', 'PCA4', 'PCA5', 'PCA2', 'Geographic region', 'PCA3') , pch=16, col=rainbow(20), ncol=4, pt.cex=2, text.width=0.2)
+```
+
+
+
+
+
+
+
+
+
+### Is this variation attributable to parasite type?
+
+```{r fig.width=10, dev='pdf', fig.path='../Manuscript/Figures/parTypeColor.pdf', dpi=300}
+layout(matrix(c(1,2),ncol=1), heights=c(1.5, 1))
+par(mar=c(0.25,0.25,0.25,0.25))
+
+brtResults.ParType=brtResults.all[inds,order(parType[,1])]
+
+barplot(brtResults.ParType, col=rainbow(20), xaxt='n', axes=FALSE, border = NA)
+abline(v=c(30,66,81,120,241)*1.199, lwd=4)
+plot.new()
+text(15/239, 1 , parGroups[1],srt=0)
+text(50/239, 1, parGroups[2], srt=0)
+text(75/239, 0.95, parGroups[3], srt=0)
+text(105/239, 1, parGroups[4], srt=0)
+text(180/239, 1, parGroups[5], srt=0)
+
+
+legend(0.02,0.85, c('Brackish', 'Marine', 'Freshwater', 'Host growth rate', 'Lifespan', 'Host age at maturity', 'PSR', 'Longitude', 'Area of occupancy', 'Max length', 'Latitude', 'Host trophic level', 'PCA1', 'PCA4', 'PCA5', 'PCA2', 'Geographic region', 'PCA3') , pch=16, col=rainbow(20), ncol=4, pt.cex=2, text.width=0.2)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Results
+
+
+
+
+
+
+
+
+
+## Discussion
+
+
+
+## Tables
+
+Table 1: Host traits examined and their corresponding units
+
+
+
+
+
+
+
+
+
+
+
+## Figures
+
+
+
+
+
+
+
+
+## References 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r, eval=F, echo=F}
+### Does the number of hosts infected influence the relative contribution values from the boosted regression tree analysis? (no).
+
+layout(matrix(c(1,2),ncol=1), heights=c(1.5, 1))
+par(mar=c(0.25,0.25,0.25,0.25))
+barplot(brtResults[,order(hostNum)], col=rainbow(15), xaxt='n', axes=FALSE, border = NA)
+plot.new()
+legend(0.02,0.85,varNames , pch=16, col=rainbow(15), ncol=4, pt.cex=2, text.width=0.2)
+
+
+```
+
+
+
+
+```{r eval=FALSE, echo=FALSE}
 layout(matrix(c(1,2,3),ncol=3))
 plot(1:5, meanAUC, ylim=c(0.45, 1), xlim=c(0.5,5.5), las=1, pch=16, tck=0.01, xaxt='n', xlab='Predictive model used', ylab='Area Under ROC curve', main='Host traits')
 abline(h=0.5, col=grey(0.5), lty=2, lwd=2)
@@ -466,201 +901,7 @@ axis(1, at=1:5, labels=c('Base', 'BRT', 'SVM', 'LR', 'RF'), tck=0.01, srt=30)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-### Does predictive power differ systematically among parasites?
-
-```{r eval=T, echo=F}
-rownames(testRet) = parPest[1:241]
-
-#Number of hosts each parasite infects
-hostNum = summary(pest[,'P_SP'])[1:241]
-
-#Beating the data up to get parasite 'type' 
-parType = unique(pest[which(pest[,'P_SP']%in% parPest[1:241]), 2:4], MARGIN=1)
-parType[,1] = gsub('[*]','',parType[,1])
-parType = unique(parType, MARGIN=1)
-parType = parType[order(parType[,3]),]
-
-# Hand-wavey solution to the problem of classifying parasites as two different classes of parasites 
-# (C and T, or A and M). 
-
-stupid=names(summary(parType[,3], maxsum=242)[1:3])
-for(i in 1:length(stupid)){
-  parType=parType[-which(parType[,3] %in% stupid[i])[1],]
-}
-
-```
-
-
-
-
-```{r}
-par(mar=c(8,4,0.25,0.25))
-hostCol=c('#9367B1', '#20C0D0','#719240', grey(0.5), '#D9437E')
-plot(as.factor(parType[1:239,1]), testRet[1:239,2], col=hostCol, pch=16, las=1, ylab='Accuracy (AUC)', xaxt='n')
-parGroups=c('Acanthocephala', 'Cestoda', 'Monogenea', 'Nematoda', 'Trematoda')
-axis(1, 1:5, parGroups, las=2, tck=0.01, padj=0)
-```
-
-
-
-
-### Are parasite distributions shaped by different factors?
-
-
-#### BRT model using only host traits (and geographic variables)
-
-```{r eval=T, echo=T}
-varNames=c('Geographic region', 'Area of occupancy', 'Latitude', 'Max length', 'Host trophic level', 'Longitude', 'Host age at maturity', 'Host life span', 'Host growth rate', 'Marine', 'Freshwater', 'Brackish')
-#rownames(brtResults[rev(inds),])
-brtResults=brtResults[,1:240]
-brtMean = rowMeans(brtResults)
-brtSE = apply(brtResults, 1, sd) / sqrt(ncol(brtResults))
-brtSD = apply(brtResults, 1, sd)
-
-inds.a=order(brtMean)
-cols=rev(c(1,1,1,2,2,1,2,2,2,2,2,2))
-par(mar=c(3,9,1,1))
-plot(brtMean[inds.a], 1:12, pch=16, xlim=c(0,26), ylim=c(0.5,12.5), las=1, xlab='', ylab='', yaxt='n', col=cols, tck=0.01)
-segments(x0=brtMean[inds.a] - brtSE[inds.a], x1=brtMean[inds.a] + brtSE[inds.a], y0=1:12, col=cols,lwd=3)
-mtext("Relative contribution", side=1, line=2)
-axis(2, at=1:12, labels=rev(varNames), las=1)
-```
-
-
-```{r eval=T, echo=T, fig.width=9}
-layout(matrix(c(1,2),ncol=1), heights=c(1.5, 1))
-par(mar=c(0.25,0.25,0.25,0.25))
-barplot(brtResults[rev(inds.a),], col=rainbow(15), xaxt='n', axes=FALSE, border = NA)
-plot.new()
-legend(0.02,0.85,varNames , pch=16, col=rainbow(15), ncol=4, pt.cex=2, text.width=0.2)
-```
-
-
-
-
-
-#### BRT models using only parasite community data (parasite species richness and a PCA of parasite community composition)
-
-
-```{r eval=T, echo=T}
-brtMean.b = rowMeans(brtResults.b)
-brtSE.b = apply(brtResults.b, 1, sd) / sqrt(ncol(brtResults.b))
-brtSD.b = apply(brtResults.b, 1, sd)
-
-inds=order(brtMean.b)
-par(mar=c(3,9,1,1))
-plot(brtMean.b[inds], 1:11, pch=16, xlim=c(0,26), ylim=c(0.5,11.5), las=1, xlab='', ylab='', yaxt='n', col=1, tck=0.01)
-segments(x0=brtMean.b[inds] - brtSE.b[inds], x1=brtMean.b[inds] + brtSE.b[inds], y0=1:12, col=grey(0.5, alpha=0.5),lwd=3)
-mtext("Relative contribution", side=1, line=2)
-axis(2, at=1:11, labels=names(brtMean.b[inds]), las=1)
-```
-
-
-
-#### BRT models using data on parasite community composition and host traits
-
-Host traits still not all that important, though biogeographic region is really important. 
-
-```{r eval=T, echo=T}
-brtMean.c = rowMeans(brtResults.c)
-brtSE.c = apply(brtResults.c, 1, sd) / sqrt(ncol(brtResults.c))
-brtSD.c = apply(brtResults.c, 1, sd)
-
-inds=order(brtMean.c)
-par(mar=c(3,9,1,1))
-plot(brtMean.c[inds], 1:23, pch=16, xlim=c(0,26), ylim=c(0.5,23.5), las=1, xlab='', ylab='', yaxt='n', col=1, tck=0.01)
-segments(x0=brtMean.c[inds] - brtSE.c[inds], x1=brtMean.c[inds] + brtSE.c[inds], y0=1:23, col=grey(0.5, alpha=0.5),lwd=3)
-mtext("Relative contribution", side=1, line=2)
-axis(2, at=1:23, labels=names(brtMean.c[inds]), las=1)
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-### Is this variation attributable to parasite type?
-
-```{r fig.width=10}
-layout(matrix(c(1,2),ncol=1), heights=c(1.5, 1))
-par(mar=c(0.25,0.25,0.25,0.25))
-
-brtResults.ParType=brtResults[,order(parType[,1])]
-
-barplot(brtResults.ParType, col=rainbow(15), xaxt='n', axes=FALSE, border = NA)
-abline(v=c(30,66,81,120,241)*1.199, lwd=4)
-plot.new()
-text(15/239, 1 , parGroups[1],srt=0)
-text(50/239, 1, parGroups[2], srt=0)
-text(75/239, 0.95, parGroups[3], srt=0)
-text(105/239, 1, parGroups[4], srt=0)
-text(180/239, 1, parGroups[5], srt=0)
-
-
-legend(0.02,0.85,varNames , pch=16, col=rainbow(15), ncol=4, pt.cex=2, text.width=0.2)
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-### What if I only train on data from one specific region?
-
-Let's check out the Palearctic. 
-
-
-```{r eval=FALSE, echo=TRUE}
+```{r eval=FALSE, echo=F}
 # storage for model outputs
 baseline.auc.pal=vector(); 
 brtModel.pal=list(); brt.best.iter.pal=list(); brt.preds.pal=list(); brt.perf.pal=list(); brt.perfAUC.pal=vector()
@@ -749,10 +990,6 @@ flag=0
  colnames(ret.pal)=c('BASE', 'BRT', 'SVM', 'LR', 'RF')
 ```
 
-
-
-
-
 ```{r, eval=FALSE, echo=FALSE}
 #Extracting the BRT predictor variable importance values
 brtResults.pal=matrix(0, ncol=length(brtModel.pal), nrow=11)
@@ -763,10 +1000,7 @@ for(i in 1:length(brtModel.pal)){
 rownames(brtResults.pal) = sort(temp[,1])
 ```
 
-
-
-
-```{r eval=FALSE, echo=TRUE}
+```{r eval=FALSE, echo=F}
 # storage for model outputs
 baseline.auc.pal.b=vector(); 
 brtModel.pal.b=list(); brt.best.iter.pal.b=list(); brt.preds.pal.b=list(); brt.perf.pal.b=list(); brt.perfAUC.pal.b=vector()
@@ -866,11 +1100,7 @@ dat = data.frame(psrOut, pcaHostsOut)
  colnames(ret)=c('BASE', 'BRT', 'SVM', 'LR', 'RF')
 ```
 
-
-
-
-
-```{r eval=FALSE, echo=TRUE}
+```{r eval=FALSE, echo=F}
 # storage for model outputs
 baseline.auc.pal.c=vector(); 
 brtModel.pal.c=list(); brt.best.iter.pal.c=list(); brt.preds.pal.c=list(); brt.perf.pal.c=list(); brt.perfAUC.pal.c=vector()
@@ -971,40 +1201,69 @@ dat = data.frame(dat[,-1], psrOut, pcaHostsOut)
  colnames(ret)=c('BASE', 'BRT', 'SVM', 'LR', 'RF')
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-```{r eval=T, echo=T}
-load('/media/drakelab/Lexar/8910Project/Analysis/pest(reduced)_pal_abc.RData')
+```{r eval=F, echo=F, fig.height=3, fig.width=7}
+load('/media/drakelab/Lexar/8910Project/Analysis/Rdatafiles/pest(reduced)_pal_abc.RData')
 testRet.pal = as.matrix(ret.pal)
 testRet.pal = apply(testRet.pal, 2, as.numeric )
 meanAUC.pal = colMeans(testRet.pal)
 meanSE.pal = apply(testRet.pal, 2, sd) / sqrt(nrow(testRet.pal))
 meanSD.pal = apply(testRet.pal, 2, sd)
   
+testRet.pal.b = as.matrix(ret.pal.b)
+testRet.pal.b = apply(testRet.pal.b, 2, as.numeric )
+meanAUC.pal.b = colMeans(testRet.pal.b)
+meanSE.pal.b = apply(testRet.pal.b, 2, sd) / sqrt(nrow(testRet.pal.b))
+meanSD.pal.b = apply(testRet.pal.b, 2, sd)
+  
+testRet.pal.c = as.matrix(ret.pal.c)
+testRet.pal.c = apply(testRet.pal.c, 2, as.numeric )
+meanAUC.pal.c = colMeans(testRet.pal.c)
+meanSE.pal.c = apply(testRet.pal.c, 2, sd) / sqrt(nrow(testRet.pal.c))
+meanSD.pal.c = apply(testRet.pal.c, 2, sd)
+
+
+
+layout(matrix(c(1,2,3), ncol=3))
 plot(1:5, meanAUC.pal, ylim=c(0.45, 1), xlim=c(0.5,5.5), las=1, pch=16, tck=0.01, xaxt='n', xlab='Predictive model used', ylab='Area Under ROC curve')
 abline(h=0.5, col=grey(0.5), lty=2, lwd=2)
 segments(x0=1:5, y0=meanAUC.pal+meanSD.pal, y1=meanAUC.pal-meanSD.pal, col=grey(0.8),lwd=2)
 points(1:5, meanAUC.pal, pch=16, cex=1.5)
 axis(1, at=1:5, labels=c('Base', 'BRT', 'SVM', 'LR', 'RF'), tck=0.01, srt=30)
 
+
+plot(1:5, meanAUC.pal.b, ylim=c(0.45, 1), xlim=c(0.5,5.5), las=1, pch=16, tck=0.01, xaxt='n', xlab='Predictive model used', ylab='Area Under ROC curve')
+abline(h=0.5, col=grey(0.5), lty=2, lwd=2)
+segments(x0=1:5, y0=meanAUC.pal.b+meanSD.pal.b, y1=meanAUC.pal.b-meanSD.pal.b, col=grey(0.8),lwd=2)
+points(1:5, meanAUC.pal.b, pch=16, cex=1.5)
+axis(1, at=1:5, labels=c('Base', 'BRT', 'SVM', 'LR', 'RF'), tck=0.01, srt=30)
+
+  
+plot(1:5, meanAUC.pal.c, ylim=c(0.45, 1), xlim=c(0.5,5.5), las=1, pch=16, tck=0.01, xaxt='n', xlab='Predictive model used', ylab='Area Under ROC curve')
+abline(h=0.5, col=grey(0.5), lty=2, lwd=2)
+segments(x0=1:5, y0=meanAUC.pal.c+meanSD.pal.c, y1=meanAUC.pal.c-meanSD.pal.c, col=grey(0.8),lwd=2)
+points(1:5, meanAUC.pal.c, pch=16, cex=1.5)
+axis(1, at=1:5, labels=c('Base', 'BRT', 'SVM', 'LR', 'RF'), tck=0.01, srt=30)
+
 ```
 
 
-So my predictive power is reduced a fair bit, and many geographic variables still have high relative contribution values, suggesting that within a biogeographic region, spatial influences still help determine which fish host species are parasitized by a given parasite. 
+```{r eval=F, echo=F}
+brt.means=c(meanAUC[2], meanAUC.b[2], meanAUC.c[2], meanAUC.pal[2], meanAUC.pal.b[2], meanAUC.pal.c[2])
+brt.sd = c(meanSD[2], meanSD.b[2], meanSD.c[2], meanSD.pal[2], meanSD.pal.b[2], meanSD.pal.c[2])
+
+plot(c(1,2,3,5,6,7), brt.means, ylim=c(0.3,1), las=1, xlim=c(0.5,7.5), pch=16, tck=0.01, xlab='', ylab='', xaxt='n')
+segments(x0=c(1,2,3,5,6,7), y0=brt.means+brt.sd, y1=brt.means-brt.sd)
+abline(h=0.5, lty=2, lwd=2, col=grey(0.5))
+abline(v=4)
+axis(1, at=c(1,2,3,5,6,7), rep(c('Host', 'Parasite', 'Both'),2), tck=0.01)
+box()
+#mtext('', side=1, line=2)
+mtext('Area under ROC curve', side=2, line=2.5)
+```
 
 
-```{r eval=T, echo=T}
+
+```{r eval=F, echo=F}
 brtMean.pal = rowMeans(brtResults.pal)
 brtSE.pal = apply(brtResults.pal, 1, sd) / sqrt(ncol(brtResults.pal))
 brtSD.pal = apply(brtResults.pal, 1, sd)
@@ -1023,329 +1282,5 @@ axis(2, at=1:11, labels=varNames.pal, las=1, tck=0.01)
 ```
 
 
-
-
-```{r eval=F, echo=F, fig.width=9}
-layout(matrix(c(1,2),ncol=1), heights=c(1.5, 1))
-par(mar=c(0.25,0.25,0.25,0.25))
-barplot(brtResults.pal[rev(inds.pal),], col=rainbow(15), xaxt='n', axes=FALSE, border = NA)
-plot.new()
-legend(0.02,0.85,varNames , pch=16, col=rainbow(15), ncol=4, pt.cex=2, text.width=0.2)
-```
-
-
-
-
-
-## Results
-
-
-
-
-
-
-
-
-
-## Discussion
-
-
-
-## Tables
-
-Table 1: Host traits examined and their corresponding units
-
-
-
-
-
-
-
-
-
-
-
-## Figures
-
-
-
-
-
-
-
-
-## References 
-
-
-
-
-```{r, eval=F, echo=F}
-### Does the number of hosts infected influence the relative contribution values from the boosted regression tree analysis? (no).
-
-layout(matrix(c(1,2),ncol=1), heights=c(1.5, 1))
-par(mar=c(0.25,0.25,0.25,0.25))
-barplot(brtResults[,order(hostNum)], col=rainbow(15), xaxt='n', axes=FALSE, border = NA)
-plot.new()
-legend(0.02,0.85,varNames , pch=16, col=rainbow(15), ncol=4, pt.cex=2, text.width=0.2)
-
-
-```
-
-
-
-```{r, message=FALSE, eval=FALSE, echo=FALSE}
-#### DEPRECATED CODE #### 
-#load('/media/drakelab/Lexar/8910Project/Analysis/fishParty(reduced).RData')
-#load('/media/drakelab/Lexar/8910Project/Analysis/fishParty.RData')
-# list of imputed data matrices
-m.imputedData=list()
-
-# storage for model outputs
-m.baseline.auc=vector(); 
-m.brtModel=list(); m.brt.best.iter=list(); m.brt.preds=list(); m.brt.perf=list(); m.brt.perfAUC=vector()
-m.svmModel=list(); m.svm.preds=list(); m.svm.perf=list(); m.svm.perfAUC=vector()
-m.lrModel=list(); m.lr.preds=list(); m.lr.perf=list(); m.lr.perfAUC=vector()
-m.rfModel=list(); m.rf.preds=list(); m.rf.perf=list(); m.rf.perfAUC=vector()
-
-
-
-for(i in 1:nrow(marineMatrix3)){
-#data imputation
-  dat = getPointsObject(marineMatrix3[i,], MT)
-  dat = rfImpute(dat[,-1], dat[,1])
-  m.imputedData[[i]] = dat
-    
- #This makes sure that the test set contains at least 4 hosts on which the parasite actually occurs
-  pres=which(dat[,1]==1)
-  inds=sample(1:nrow(dat), 0.7*nrow(dat))
-  if(sum(pres %in% inds) < 4){inds[1:4]=pres[1:4]}
-  train = dat[inds,]
-  test = dat[-inds,]
-  
-  #baseline expectations and null models
-  m.baseline.auc[i] = performance(prediction(test[sample(1:nrow(test), nrow(test)),1], test[,1]), 'auc')@y.values
-   
- ##trained models
-  #boosted regression trees
-  weights=1 / (sum(train[,1])/nrow(train))
-  m.brtModel[[i]] = gbm(train[,1] ~ ., data=train[,-1], n.trees=50000, interaction.depth=4, distribution='bernoulli', weights=1+(train[,1] * weights))
-  m.brt.best.iter[[i]] = gbm.perf(m.brtModel[[i]], method="OOB")
-  m.brt.preds[[i]] = prediction(predict(m.brtModel[[i]], newdata=test[,-1], n.trees=m.brt.best.iter[[i]]), test[,1])
-  m.brt.perf[[i]] = performance(m.brt.preds[[i]],"tpr","fpr")
-  m.brt.perfAUC[i]=unlist(performance(m.brt.preds[[i]], 'auc')@y.values)
-
-  #support vector machines
-  m.svmModel[[i]] = svm(train[,1] ~ ., data=train[,-1])
-  m.svm.preds[[i]] = prediction(predict(m.svmModel[[i]], test[,-1]), test[,1])
-  m.svm.perf[[i]] = performance(m.svm.preds[[i]],"tpr","fpr")
-  m.svm.perfAUC[i] = unlist(performance(m.svm.preds[[i]], 'auc')@y.values)
-
-  #logistic regression
-  m.lrModel[[i]] = glm(train[,1] ~ ., data=train[,-1], family=binomial)
-  m.lr.preds[[i]] = prediction(predict(m.lrModel[[i]], test[,-1]), test[,1])
-  m.lr.perf[[i]] = performance(m.lr.preds[[i]],"tpr","fpr")
-  m.lr.perfAUC[i] = unlist(performance(m.lr.preds[[i]], 'auc')@y.values)
-
-  #random forest
-  m.rfModel[[i]] = randomForest(train[,1] ~ ., data=train[,-1])
-  m.rf.preds[[i]] = prediction(predict(m.rfModel[[i]], test[,-1]), test[,1])
-  m.rf.perf[[i]] = performance(m.rf.preds[[i]],"tpr","fpr")
-  m.rf.perfAUC[i] = unlist(performance(m.rf.preds[[i]], 'auc')@y.values)
-  
-  print(i)
-}
-
-
-
-```
-
-```{r, echo=FALSE, eval=FALSE, echo=FALSE}
-#find all unique host species
-fresh=fish[which(fish[,1] %in% unique(fish[,1])[c(1,4,6,7)]),]
-marine=fish[which(fish[,1] %in% unique(fish[,1])[c(2,3)]),]
-
-freshfish=unique(fresh$Host.fish.species); marinefish=unique(marine$Host.fish.species)
-freshIndices=findSpecies(freshfish); marineIndices=findSpecies(marinefish)
-
-# Get trait information
-freshtraits=getQuantTraits(fish.data[freshIndices])
-marinetraits=getQuantTraits(fish.data[marineIndices])
-
-freshsize=cbind(getSize(fish.data[freshIndices], value='age'), getSize(fish.data[freshIndices], 'weight'), getSize(fish.data[freshIndices], 'length')); colnames(freshsize)=c('age', 'weight', 'length')
-
-marinesize=cbind(getSize(fish.data[marineIndices], value='age'), getSize(fish.data[marineIndices], 'weight'), getSize(fish.data[marineIndices], 'length')); colnames(marinesize)=c('age', 'weight', 'length')
-
-freshdepth=getDepth(fish.data[freshIndices])
-marinedepth=getDepth(fish.data[marineIndices])
-
-#format some trait matrices, and then remove any variables missing more than 90% observations
-FT = cbind(freshtraits, freshsize, freshdepth)
-FT = FT[,-which(colSums(is.na(FT)) > 500)]
-MT = cbind(marinetraits, marinesize, marinedepth)
-MT = MT[,-which(colSums(is.na(MT)) > 700)]
-
-rownames(FT)=sub('_', ' ', rownames(FT))
-rownames(MT)=sub('_', ' ', rownames(MT))
-```
-
-```{r, echo=FALSE, eval=FALSE, echo=FALSE}
-#Data processing and support functions
-edge2matrix=function(edgelist){
- return(table(edgelist[,1], edgelist[,2]))
-}
-
-# takes a matrix and returns an edgelist, where multiple reports are weighted by the number of entries in the resulting edgelist
-matrix2edge=function(matrix, quant=TRUE){
-   if(quant==FALSE){return(which(matrix>0, arr.ind=TRUE))
-   }else{
-    max=max(matrix)
-    ret=list()
-    for(i in 1:max){
-      inds=which(matrix == i, arr.ind=TRUE)
-      inds2=do.call("rbind", replicate(i, inds, simplify = FALSE))
-      those=matrix(c(rownames(matrix)[inds2[,1]], colnames(matrix)[inds2[,2]]), ncol=2)
-      ret[[i]]=those
-    }
-    ret2=matrix(unlist(ret), ncol=2, byrow=FALSE)
-    colnames(ret2)=c('Host', 'Parasite')
-    return(ret2)
-   }
-}
-
-
-freshParasite = paste(gsub(' ', '', fresh[,3]), gsub(' ','', fresh[,4]), sep=' ')
-freshParasite= gsub('Â', '', freshParasite)
-freshHosts=sub('_', ' ',rownames(FT))
-
-marineParasite = paste(gsub(' ', '', marine[,3]), gsub(' ','', marine[,4]), sep=' ')
-marineParasite = gsub('Â', '', marineParasite)
-marineHosts=sub('_', ' ', rownames(MT))
-
-freshPotentialHosts=gsub('Â', '', fresh[,'Host.fish.species'])
-freshPotentialHosts=gsub("^\\s+|\\s+$", "", freshPotentialHosts) 
-
-marinePotentialHosts=gsub('Â', '', marine[,'Host.fish.species'])
-marinePotentialHosts=gsub("^\\s+|\\s+$", "", marinePotentialHosts)
-
-freshMatrix=edge2matrix(data.frame(parasite=freshParasite, host=freshPotentialHosts))
-marineMatrix=edge2matrix(data.frame(parasite=marineParasite, host=marinePotentialHosts))
-
-#set threshold of presence points to consider (n=5)
-freshMatrix2=freshMatrix[which(rowSums(freshMatrix>0) > 25),]
-freshMatrix3=freshMatrix2[, which(colnames(freshMatrix2) %in% freshHosts)]
-
-marineMatrix2=marineMatrix[which(rowSums(marineMatrix>0) > 25),]
-marineMatrix3=marineMatrix2[, which(colnames(marineMatrix2) %in% marineHosts)]
-
-
-
-getPointsObject=function(parRow, hostTraits, binary=TRUE){
-  hostTraits=hostTraits[order(rownames(hostTraits)),]
-  inds=(rownames(hostTraits) %in% names(which(parRow>0)))
-  occVec = rep(0, nrow(hostTraits))
-  occVec[inds] = parRow[which(parRow>0)]
-  if(binary==TRUE){occVec=0+(occVec>0)}
-  return(data.frame(presence = occVec, hostTraits)) 
-}
-
-
-```
-
-```{r, message=FALSE, eval=FALSE, echo=F}
-getModels=function(fishMatrix, traitMatrix){
-  # list of imputed data matrices
-  imputedData=list()
-  # storage for model outputs
-  baseline.auc=vector(); 
-  brtModel=list(); brt.best.iter=list(); brt.preds=list(); brt.perf=list(); brt.perfAUC=vector()
-  svmModel=list(); svm.preds=list(); svm.perf=list(); svm.perfAUC=vector()
-  lrModel=list(); lr.preds=list(); lr.perf=list(); lr.perfAUC=vector()
-  rfModel=list(); rf.preds=list(); rf.perf=list(); rf.perfAUC=vector()
-
-  for(i in 1:nrow(fishMatrix)){
-    #data imputation
-    dat = getPointsObject(fishMatrix[i,], traitMatrix)
-    dat = rfImpute(dat[,-1], dat[,1])
-    imputedData[[i]] = dat
-  
-  # This makes sure that the test set contains at least 4 hosts on which the parasite actually occurs
-    pres=which(dat[,1]==1)
-    inds=sample(1:nrow(dat), 0.7*nrow(dat))
-    if(sum(pres %in% inds) < 4){inds[1:4]=pres[1:4]}
-  
-    train = dat[inds,]
-    test = dat[-inds,]
-  
-  #baseline expectations and null models
-    baseline.auc[i] = performance(prediction(test[sample(1:nrow(test), nrow(test)),1], test[,1]), 'auc')@y.values
-   
- ##trained models
-  #boosted regression trees
-    weights=1/(sum(train[,1])/nrow(train))
-    brtModel[[i]] = gbm(train[,1] ~ ., data=train[,-1], n.trees=60000, interaction.depth=4, distribution='bernoulli', weights=1+(train[,1] * weights))
-    brt.best.iter[[i]] = gbm.perf(brtModel[[i]], method="OOB")
-    brt.preds[[i]] = prediction(predict(brtModel[[i]], newdata=test[,-1], n.trees=brt.best.iter[[i]]), test[,1])
-    brt.perf[[i]] = performance(brt.preds[[i]],"tpr","fpr")
-    brt.perfAUC[i]=unlist(performance(brt.preds[[i]], 'auc')@y.values)
-
-  #support vector machines
-    svmModel[[i]] = svm(train[,1] ~ ., data=train[,-1], probability=TRUE)
-    svm.preds[[i]] = prediction(predict(svmModel[[i]], test[,-1]), test[,1])
-    svm.perf[[i]] = performance(svm.preds[[i]],"tpr","fpr")
-    svm.perfAUC[i] = unlist(performance(svm.preds[[i]], 'auc')@y.values)
-
-  #logistic regression
-    lrModel[[i]] = glm(train[,1] ~ ., data=train[,-1], family=binomial)
-    lr.preds[[i]] = prediction(predict(lrModel[[i]], test[,-1]), test[,1])
-    lr.perf[[i]] = performance(lr.preds[[i]],"tpr","fpr")
-    lr.perfAUC[i] = unlist(performance(lr.preds[[i]], 'auc')@y.values)
-
-  #random forest
-    rfModel[[i]] = randomForest(train[,1] ~ ., data=train[,-1])
-    rf.preds[[i]] = prediction(predict(rfModel[[i]], test[,-1]), test[,1])
-    rf.perf[[i]] = performance(rf.preds[[i]],"tpr","fpr")
-    rf.perfAUC[i] = unlist(performance(rf.preds[[i]], 'auc')@y.values)
-  print(i)
-  }
- ret=cbind(baseline.auc, brt.perfAUC, svm.perfAUC, lr.perfAUC, rf.perfAUC)
- colname(ret)=c('BASE', 'BRT', 'SVM', 'LR', 'RF')
-return()
-}
-
-
-
-## get models for freshwater and marine parasites
-freshOut=getModels(freshMatrix3, FT)
-marineOut=getModels(marineMatrix3, MT)
-```
-
-```{r eval=F, echo=FALSE}
-
-meanAUC=colMeans(freshOut)
-meanSE = apply(freshOut,2,sd) / sqrt(nrow(freshOut))
-meanSD = apply(freshOut,2,sd)
-  
-plot(1:5, meanAUC, ylim=c(0.45, 1), xlim=c(0.5,5.5), las=1, pch=16, tck=0.01, xaxt='n', xlab='Predictive model used', ylab='Area Under ROC curve')
-abline(h=0.5, col=grey(0.5), lty=2, lwd=2)
-segments(x0=1:5, y0=meanAUC+meanSD, y1=meanAUC-meanSD, col=grey(0.8),lwd=2)
-points(1:5, meanAUC, pch=16, cex=1.5)
-axis(1, at=1:5, labels=c('Base', 'BRT', 'SVM', 'LR', 'RF'), tck=0.01, srt=30)
-
-```
-
-```{r eval=F, echo=FALSE}
-
-meanAUC=colMeans(marineOut)
-meanSE = apply(marineOut,2,sd) / sqrt(nrow(marineOut))
-meanSD = apply(marineOut,2,sd)
-  
-  
-plot(1:5, m.meanAUC, ylim=c(0.45, 1), xlim=c(0.5,5.5), las=1, pch=16, tck=0.01, xaxt='n', xlab='Predictive model used', ylab='Area Under ROC curve')
-abline(h=0.5, col=grey(0.5), lty=2, lwd=2)
-segments(x0=1:5, y0=m.meanAUC+m.meanSD, y1=m.meanAUC-m.meanSD, col=grey(0.8),lwd=2)
-points(1:5, m.meanAUC, pch=16, cex=1.5)
-axis(1, at=1:5, labels=c('Base', 'BRT', 'SVM', 'LR', 'RF'), tck=0.01, srt=30)
-
-```
 
 
