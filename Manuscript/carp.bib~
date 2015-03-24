@@ -8,6 +8,116 @@
   year={2012}
 }
 
+
+@article{krasnov2014,
+  title={Assembly rules of ectoparasite communities across scales: combining patterns of abiotic factors, host composition, geographic space, phylogeny and traits},
+  author={Krasnov, Boris R and Shenbrot, Georgy I and Khokhlova, Irina S and Stanko, Michal and Morand, Serge and Mouillot, David},
+  journal={Ecography},
+  year={2014},
+  publisher={Wiley Online Library}
+}
+
+
+@article{zelmer2014,
+  title={Size, Time, and Asynchrony Matter: The Species-Area Relationship for Parasites of Freshwater Fishes},
+  author={Zelmer, Derek A},
+  journal={The Journal of parasitology},
+  volume={100},
+  number={5},
+  pages={561--568},
+  year={2014},
+  publisher={American Society of Parasitologists}
+}
+
+
+@article{gonzalez2005,
+  title={Spatial and temporal predictability of the parasite community structure of a benthic marine fish along its distributional range},
+  author={Gonz{\'a}lez, MT and Poulin, Robert},
+  journal={International Journal for Parasitology},
+  volume={35},
+  number={13},
+  pages={1369--1377},
+  year={2005},
+  publisher={Elsevier}
+}
+
+@article{gibson2005,
+  title={Host-parasite database of the natural history museum, London},
+  author={Gibson, DI and Bray, RA and Harris, EA},
+  journal={URL http://www. nhm. ac. uk/research-curation/scientific-resources/taxonomy-systematics/host-parasites/database/index. jsp},
+  year={2005}
+}
+
+@article{nunn2005,
+  title={The global mammal parasite database: an online resource for infectious disease records in wild primates},
+  author={Nunn, Charles L and Altizer, Sonia M},
+  journal={Evolutionary Anthropology: Issues, News, and Reviews},
+  volume={14},
+  number={1},
+  pages={1--2},
+  year={2005},
+  publisher={Wiley Online Library}
+}
+
+
+@article{poulin2002,
+  title={The predictability of helminth community structure in space: a comparison of fish populations from adjacent lakes},
+  author={Poulin, Robert and Valtonen, E Tellervo},
+  journal={International Journal for Parasitology},
+  volume={32},
+  number={10},
+  pages={1235--1243},
+  year={2002},
+  publisher={Elsevier}
+}
+
+
+@article{vidal2003,
+  title={Spatial and temporal repeatability in parasite community structure of tropical fish hosts},
+  author={Vidal-Mart{\'\i}nez, VM and Poulin, Royal},
+  journal={Parasitology},
+  volume={127},
+  number={04},
+  pages={387--398},
+  year={2003},
+  publisher={Cambridge Univ Press}
+}
+
+
+@article{timi2003,
+  title={Parasite community structure within and across host populations of a marine pelagic fish: how repeatable is it?},
+  author={Timi, Juan T and Poulin, Robert},
+  journal={International Journal for Parasitology},
+  volume={33},
+  number={12},
+  pages={1353--1362},
+  year={2003},
+  publisher={Elsevier}
+}
+
+@article{johnson2013,
+  title={Host and parasite diversity jointly control disease risk in complex communities},
+  author={Johnson, Pieter TJ and Preston, Daniel L and Hoverman, Jason T and LaFonte, Bryan E},
+  journal={Proceedings of the National Academy of Sciences},
+  volume={110},
+  number={42},
+  pages={16916--16921},
+  year={2013},
+  publisher={National Acad Sciences}
+}
+
+@article{dallas2014b,
+  title={Relative importance of host environment, transmission potential and host phylogeny to the structure of parasite metacommunities},
+  author={Dallas, Tad and Presley, Steven J},
+  journal={Oikos},
+  volume={123},
+  number={7},
+  pages={866--874},
+  year={2014},
+  publisher={Wiley Online Library}
+}
+
+
 @article{braga2014,
   title={Drivers of parasite sharing among Neotropical freshwater fishes},
   author={Braga, Mariana P and Razzolini, Emanuel and Boeger, Walter A},

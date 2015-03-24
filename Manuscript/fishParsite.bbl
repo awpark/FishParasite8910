@@ -1,4 +1,4 @@
-\begin{thebibliography}{8}
+\begin{thebibliography}{10}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -32,11 +32,25 @@ Jane Elith, John~R Leathwick, and Trevor Hastie.
 Rainer Froese and Daniel Pauly.
 \newblock Fishbase, 2010.
 
+\bibitem[Gibson et~al.(2005)Gibson, Bray, and Harris]{gibson2005}
+DI~Gibson, RA~Bray, and EA~Harris.
+\newblock Host-parasite database of the natural history museum, london.
+\newblock \emph{URL http://www. nhm. ac.
+  uk/research-curation/scientific-resources/taxonomy-systematics/host-parasites/database/index.
+  jsp}, 2005.
+
 \bibitem[Liaw and Wiener(2002)]{randomForest}
 Andy Liaw and Matthew Wiener.
 \newblock Classification and regression by randomforest.
 \newblock \emph{R News}, 2\penalty0 (3):\penalty0 18--22, 2002.
 \newblock URL \url{http://CRAN.R-project.org/doc/Rnews/}.
+
+\bibitem[Nunn and Altizer(2005)]{nunn2005}
+Charles~L Nunn and Sonia~M Altizer.
+\newblock The global mammal parasite database: an online resource for
+  infectious disease records in wild primates.
+\newblock \emph{Evolutionary Anthropology: Issues, News, and Reviews},
+  14\penalty0 (1):\penalty0 1--2, 2005.
 
 \bibitem[Strona and Lafferty(2012)]{strona2012}
 Giovanni Strona and Kevin~D Lafferty.

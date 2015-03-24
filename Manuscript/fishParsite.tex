@@ -56,7 +56,7 @@
 
 \textbf{Selling points} \\
 \begin{enumerate}
- \item Similar parasites infect similar hosts. This means that the host represents a patch, patches vary in quality, and host-parasite interactions are not neutral. If there were neutral, geographic variables would have been king, 
+ \item Similar parasites infect similar hosts. This means that the host represents a patch, patches vary in quality, and host-parasite interactions are not neutral. If there were neutral, geographic variables would have been king, right?
  
  
 \end{enumerate}
@@ -70,20 +70,25 @@
  \paragraph{Most of parasite population and community ecology is about looking for patterns, and lots of folks don't find them, and have called host-parasite interactions neutral, or random}
  Parasite communities are sometimes conserved across host species, such that the presence of one parasite may increase the likelihood of finding another parasite species.
  
+ 
+ 
+ 
  \paragraph{Being able to predict parasite occurrence is pretty important, for a number of reasons (species invasions/biotic resistance, spillover to human hosts, etc.}
  
  
+ 
+ 
+ 
  \paragraph{Previous work and knowledge gap}
-  One of the largest factors holding predictive models of parasite distributions among potential hosts is the relative paucity of data (but see \cite{}). However, this barrier is being overcome both by scientists \cite{strona2012} and museums (\cite{NUNN}). Studies utilizing these large datasets have largely asked questions about parasite co-occurrence patterns \cite{strona2013}, or the factors influencing parasite sharing \cite{braga2014, dallas2014b}. These studies largely examine parasite community composition, and determine the influence of host traits or phylogenetic relationships on parasite community composition. However, almost no studies have attempted to predict what host species a parasite will infect. Previously, \citet{strona2013} developed a framework to predict parasite co-occurrence likelihood given host community, and habitat variables. This approach is predicated on the idea that information on hosts and geography are what determine the likelihood of a parasite infecting a given host. 
+  One of the largest factors holding predictive models of parasite distributions among potential hosts is the relative paucity of data (but see \cite{}). However, this barrier is being overcome both by scientists \cite{strona2012, nunn2005} and museums (\cite{gibson2005}). Studies utilizing these large datasets have largely asked questions about parasite co-occurrence patterns \cite{strona2013}, or the factors influencing parasite sharing \cite{braga2014, dallas2014b}. These studies largely examine parasite community composition, and determine the influence of host traits or phylogenetic relationships on parasite community composition. However, almost no studies have attempted to predict what host species a parasite will infect. Previously, \citet{strona2013} developed a framework to predict parasite co-occurrence likelihood given host community, and habitat variables. This approach is predicated on the idea that information on hosts and geography are what determine the likelihood of a parasite infecting a given host. 
 
   
  \paragraph{Thesis (what I did, what I found)}
     
-  Here, we test the veracity of this idea, testing the predictive capability of models trained on host traits, geographic variables, or parasite community variables. To do this, we examined a large dataset on interactions between freshwater fish and their parasite communities \cite{strona2012}. The number and identity of host species that a given parasite could infect may be constrained by geographic location, host trait variables (i.e. patch quality), or the existing parasite community of the given host species (i.e. parasite community structure). We trained boosed regression models on each of these three variable types, predicting the potential distribution of 238 parasite species. Parasite species distributions were most constrained by the existing parasite community, as this model allowed for highly accurate prediction of parasite occurrence on a set of hosts. This suggests that either parasite community composition contains information about host susceptibility to infection, and potentially information on the relevant ranges of host and parasite, serving as a measure of geographic location. Taken together, this suggests that parasite community composition can determine parasite occurrence in a host community. This has important applications to the study of invasive species, as it may be possible to predict what parasites will spillover to other hosts in the case of a non-native host introduction, or the biotic resistance of the native host community, as the native parasite community may be capable of infecting the non-native host. 
+  Here, we test this idea by quantifying the predictive capability of models trained on host traits, geographic variables, or parasite community variables. To do this, we examined a large dataset on interactions between freshwater fish and their parasite communities \cite{strona2012}. The number and identity of host species that a given parasite could infect may be constrained by geographic location, host trait variables (i.e. patch quality), or the existing parasite community of the given host species (i.e. parasite community structure). We trained boosed regression models on each of these three variable types, predicting the potential distribution of 238 parasite species. Parasite species distributions were most constrained by the existing parasite community, as this model allowed for highly accurate prediction of parasite occurrence on a set of hosts. This suggests that either parasite community composition contains information about host susceptibility to infection, and potentially information on the relevant ranges of host and parasite, serving as a measure of geographic location. Taken together, this suggests that parasite community composition can determine parasite occurrence in a host community. This has important applications to the study of invasive species, as it may be possible to predict what parasites will spillover to other hosts in the case of a non-native host introduction, or the biotic resistance of the native host community, as the native parasite community may be capable of infecting the non-native host. 
   
   
- 
- %It's important to note right up front that the importance of parasite community structure cannot be interpreted as evidence for community interactions, as parasites could infect hosts based on their traits, and the parasite community information could just be serving as a proxy for unmeasured host trait variation. However, predicting parasite occurrence based solely on parasite community information does remove some importance of the patch (host), and is easy to sell, as it may be possible to predict spillover of parasites, or the degree of biotic resistance a community offers to a potential invader, simply by having presence-absence data on parasite communities. 
+%It's important to note right up front that the importance of parasite community structure cannot be interpreted as evidence for community interactions, as parasites could infect hosts based on their traits, and the parasite community information could just be serving as a proxy for unmeasured host trait variation. However, predicting parasite occurrence based solely on parasite community information does remove some importance of the patch (host), and is easy to sell, as it may be possible to predict spillover of parasites, or the degree of biotic resistance a community offers to a potential invader, simply by having presence-absence data on parasite communities. 
 
 %What constrains the range of hosts that a parasite can infect? Is there a simple range of host functional traits that can determine the likelihood that a parasite infects a given host species? How well can we predict parasite occurrences given \textit{only} host life history traits? How about using solely information on parasite community structure? 
 
@@ -111,16 +116,17 @@
 \section{Results}
 
   \paragraph{Importance of host traits, geographic variables, and parasite community similarity}
-  The random null model unsurprisingly performed with low accuracy.
-  
-  
+   All models performed better than our null predictions (null model AUC = 0.50). With varying degrees of accuracy, models were able to predict parasite occurrence for the 238 parasite species examined using host traits ($\bar{AUC}$ = 0.66), geographic variables ($\bar{AUC}$ = 0.79), and parasite community similarity ($\bar{AUC}$ = 0.88). The full model containing all variables was able to successfully predict parasite occurrences in the hold-out test dataset with high accuracy ($\bar{AUC}$ = 0.90). The relative contribution (RC) values for each separate model, and the model trained on all available data are provided in Figure \ref{fig:megaBRT}. 
   
   \paragraph{Details about full model (RC values, etc.)}
-  
+  However, the importance of variable group (host traits, geographic variables, or parasite community variables) to predictive power differed among parasite species in the full model (Figure \ref{fig:allDataBar}). Despite the apparent variation in the relative contributions of each class of variables, the error bars on the relative contribution values are small (Figure \ref{fig:megaBRT}). Further, variables related to parasite community similarity had the highest relative contribution values in the full model, summing to more than half of the relative contribution values, and constituting four of the top five explanatory variables.  
   
   
   \paragraph{Was predictive ability influence by parasite specificity, parasite type, or...?} 
   
+  It is possible that predictive power could be a function of parasite taxonomic affiliation, or host specificity. However, models trained on each of the variable classes, including the full model, did not differ in predictive power among parasite taxonomic groups (Figure S1). Further, predictive accuracy was unrelated to parasite specificity, where specificity is defined as the number of unique host species that a parasite species was observed to infect (Figure S2). This may be caused by our \textit{a priori} condition for the minimum number of parasite occurrences ($n$ = 20), set in an effort to provide the model enough data to train and cross validate.  
+ 
+ 
  
   
 
@@ -129,8 +135,12 @@
   \paragraph{State most important findings}
   
   
+  
+  
   \paragraph{what does this mean?}
-  Tie into concepts of invasion and biotic resistance. Also emphasize that this suggests parasites are not simply random assemblages, but can be predicted with limited accuracy based on host traits, and with much greater accuracy using only data on parasite community composition. 
+  Tie into concepts of invasion and biotic resistance. Also emphasize that this suggests parasites are likely not random assemblages, but can be predicted with limited accuracy based on host traits, and with much greater accuracy using only data on parasite community composition. 
+ 
+ 
  
   \paragraph{}
  
@@ -202,8 +212,17 @@ Longitude           & max - min degrees & Longitudinal distribution         & 1 
  \label{fig:megaBRT}
  \end{figure}
 
+ 
  \newpage
-  %I like this plot because it's pretty, but I worry that any new information is just getting lost in the rainbow soup. Another idea would be to just color code classes of variables to highlight the importance of parasite community similarity. 
+ \begin{figure}[h!]
+  \includegraphics[width=\textwidth]{Figures/allDataColorGS.pdf}
+  \caption{Relative contribution values for variables of one of three classes; host traits, geographic variables, or parasite community variables. Each column represents a model trained on occurrence data for a single parasite species.}
+ \label{fig:allDataBar}
+ \end{figure}
+
+ 
+ 
+ \newpage
  \begin{figure}[h!]
   \includegraphics[width=\textwidth]{Figures/parTypeColor.pdf}
   \caption{Variation in variable importance as a function of parasite type. Each column represents a model trained on occurrence data for a single parasite species. Variables are sorted by their mean relative importance values across parasite species, but these values vary among parasite species.}
@@ -222,9 +241,17 @@ Longitude           & max - min degrees & Longitudinal distribution         & 1 
 \begin{figure}[h]
   \includegraphics[width=\textwidth]{Figures/parAccuracy.pdf}
   \caption{Accuracy (Area under Receiver operator characteristic (ROC) curves) for boosted regression models trained using host traits (top left), parasite community similarity (top right), geographic variables (bottom left), and all available data (bottom right) as a function of parasite type ($x$-axis).   }
- \label{fig:parasite}
+ \label{fig:parAUC}
  \end{figure}
 
+ 
+ 
+ 
+\begin{figure}[h]
+  \includegraphics[width=\textwidth]{Figures/hostNumAccuracy.pdf}
+  \caption{Accuracy (Area under Receiver operator characteristic (ROC) curves) for boosted regression models trained using host traits, parasite community similarity, geographic variables, and all available data as a function of the number of hosts the parasite species was collected on ($x$-axis). This host range estimate was uncorrelated to accuracy, though some models trained on host traits (black dots) performed poorly when parasite species were specific to a smaller number of host species. }
+ \label{fig:HostNum}
+ \end{figure}
 
 
 

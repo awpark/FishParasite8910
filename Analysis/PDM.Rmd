@@ -600,11 +600,11 @@ dev.copy(pdf, width=3.6, height=3.6, '../Manuscript/Figures/brtAccuracy.pdf'); d
 
 ### Does predictive power differ systematically among parasites?
 
-```{r eval=T, echo=T}
+```{r eval=T, echo=F}
 rownames(testRet) = parPest[1:238]
 
 #Number of hosts each parasite infects
-hostNum = summary(pest[,'P_SP'])[1:238]
+#hostNum = summary(pest[,'P_SP'])[1:238]
 
 #Beating the data up to get parasite 'type' 
 parType = unique(pest[which(pest[,'P_SP']%in% parPest[1:238]), 2:4], MARGIN=1)
@@ -619,6 +619,15 @@ stupid=names(summary(parType[,3], maxsum=242)[1:3])
 for(i in 1:length(stupid)){
   parType=parType[-which(parType[,3] %in% stupid[i])[1],]
 }
+
+plot(hostNum[1:238], ret[1:238,'BRT'], tck=0.01, las=1, xlab='Number host species infected', pch=16, ylab='Accuracy (AUC)')
+points(hostNum[1:238], ret.geo[1:238,'BRT'], pch=16, col='skyblue' )
+points(hostNum[1:238], ret.b[1:238,'BRT'], pch=16, col='darkseagreen1')
+points(hostNum[1:238], ret.c[1:238,'BRT'], pch=16, col='firebrick3')
+abline(h=0.5, col=grey(0.5,0.5), lwd=2, lty=2)
+legend(100, 0.4, c('Host traits', 'Geography', 'Parasite community', 'Full model'), pch=16, col=c(1, 'skyblue','darkseagreen1', 'firebrick3'), bty='n')
+
+dev.copy(pdf, width=5, height=5, '../Manuscript/Figures/hostNumAccuracy.pdf'); dev.off()
 
 ```
 
@@ -779,13 +788,19 @@ dev.copy(pdf, width=6, height=5, '../Manuscript/Figures/allData.pdf'); dev.off()
 
 
 ```{r eval=T, echo=T, fig.width=9}
+cols=c('#7EC0EE',  '#32CD32', '#CD3232')
+greycols=c(grey(0.75,0.5), grey(0.25,0.5), 'black')
+#inds=order(brtMean.c)
+inds=c(1,1,1,1,2,1,1,1,2,3,2,3,3,3,3,3,2,2)
 layout(matrix(c(1,2),ncol=1), heights=c(2.5, 1))
 par(mar=c(0.25,0.25,0.25,0.25))
-barplot(brtResults.all[inds,], col=rainbow(20), xaxt='n', axes=FALSE, border = NA)
+barplot(brtResults.all[order(inds),], col=greycols[c(1,1,1,1,1,1,1,2,2,2,2,2,3,3,3,3,3,3)], xaxt='n', axes=FALSE, border = NA)
 plot.new()
-legend(0.02,0.85, c('Brackish', 'Marine', 'Freshwater', 'Host growth rate', 'Lifespan', 'Host age at maturity', 'PSR', 'Longitude', 'Area of occupancy', 'Max length', 'Latitude', 'Host trophic level', 'PCA1', 'PCA4', 'PCA5', 'PCA2', 'Geographic region', 'PCA3') , pch=16, col=rainbow(20), ncol=4, pt.cex=2, text.width=0.2)
+legend(0.02,0.85, c('Host traits', 'Geographic variables', 'Parasite community variables'), col=greycols, ncol=3, pt.cex=2, text.width=c(0, 0.175,0.23), pch=16, bty='n')
 
-dev.copy(pdf, width=7, height=5, '../Manuscript/Figures/allDataColor.pdf'); dev.off()
+#legend(0.02,0.85, c('Brackish', 'Marine', 'Freshwater', 'Host growth rate', 'Lifespan', 'Host age at maturity', 'PSR', 'Longitude', 'Area of occupancy', 'Max length', 'Latitude', 'Host trophic level', 'PCA1', 'PCA4', 'PCA5', 'PCA2', 'Geographic region', 'PCA3') , pch=16, col=rainbow(20), ncol=4, pt.cex=2, text.width=0.2)
+
+dev.copy(pdf, width=7, height=5, '../Manuscript/Figures/allDataColorGS.pdf'); dev.off()
 ```
 
 
@@ -814,6 +829,11 @@ plot(brtMean.c[inds], 1:18, pch=16, xlim=c(0,18), ylim=c(0.75,18.25), las=1, xla
 segments(x0=brtMean.c[inds] - brtSE.c[inds], x1=brtMean.c[inds] + brtSE.c[inds], y0=1:18, col=grey(0.5, alpha=0.5),lwd=3)
 mtext("Relative contribution", side=1, line=2)
 axis(2, at=1:18, labels=c('Brackish', 'Marine', 'Freshwater', 'Host growth rate', 'Lifespan', 'Host age at maturity', 'PSR', 'Longitude', 'Area of occupancy', 'Max length', 'Latitude', 'Host trophic level', 'PCA1', 'PCA4', 'PCA5', 'PCA2', 'Geographic region', 'PCA3'),las=1)
+
+
+
+
+
 
 #plot2 (host traits)
 brtMean = rowMeans(brtResults.traits)
