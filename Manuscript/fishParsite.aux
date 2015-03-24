@@ -1,33 +1,55 @@
 \relax 
 \@writefile{toc}{\contentsline {section}{Abstract}{1}}
 \@writefile{toc}{\contentsline {section}{Keywords}{1}}
-\@writefile{toc}{\contentsline {section}{Introduction}{1}}
-\@writefile{toc}{\contentsline {paragraph}{Host-parasite relationships are complex, intimate interactions with lots of impacts}{1}}
+\citation{}
+\citation{strona2012}
+\citation{NUNN}
 \citation{strona2013}
-\citation{strona2012,strona2013}
-\citation{froese2010}
+\citation{braga2014,dallas2014b}
+\citation{strona2013}
+\citation{strona2012}
+\@writefile{toc}{\contentsline {section}{Introduction}{2}}
+\@writefile{toc}{\contentsline {paragraph}{Host-parasite relationships are complex, intimate (non-neutral) interactions with lots of impacts}{2}}
+\@writefile{toc}{\contentsline {paragraph}{Most of parasite population and community ecology is about looking for patterns, and lots of folks don't find them, and have called host-parasite interactions neutral, or random}{2}}
 \@writefile{toc}{\contentsline {paragraph}{Being able to predict parasite occurrence is pretty important, for a number of reasons (species invasions/biotic resistance, spillover to human hosts, etc.}{2}}
 \@writefile{toc}{\contentsline {paragraph}{Previous work and knowledge gap}{2}}
 \@writefile{toc}{\contentsline {paragraph}{Thesis (what I did, what I found)}{2}}
-\@writefile{toc}{\contentsline {section}{Methods}{2}}
-\@writefile{toc}{\contentsline {paragraph}{Data and processing}{2}}
-\@writefile{toc}{\contentsline {paragraph}{Predictor variables}{3}}
-\@writefile{toc}{\contentsline {paragraph}{Model formulation}{3}}
-\@writefile{toc}{\contentsline {paragraph}{Models used}{3}}
+\@writefile{toc}{\contentsline {section}{Methods}{3}}
+\@writefile{toc}{\contentsline {paragraph}{Data and processing}{3}}
+\citation{strona2012,strona2013}
+\citation{froese2010}
+\citation{randomForest}
+\citation{strona2013}
+\citation{elith2008,dallas2014}
+\@writefile{toc}{\contentsline {paragraph}{Predictive model formulation}{4}}
+\@writefile{toc}{\contentsline {section}{Results}{5}}
+\@writefile{toc}{\contentsline {paragraph}{Importance of host traits, geographic variables, and parasite community similarity}{5}}
+\@writefile{toc}{\contentsline {paragraph}{Details about full model (RC values, etc.)}{5}}
 \bibstyle{plainnat}
 \bibdata{carp.bib}
-\bibcite{froese2010}{{1}{2010}{{Froese and Pauly}}{{}}}
-\bibcite{strona2012}{{2}{2012}{{Strona and Lafferty}}{{}}}
-\bibcite{strona2013}{{3}{2013}{{Strona et~al.}}{{Strona, Palomares, Bailly, Galli, and Lafferty}}}
-\@writefile{toc}{\contentsline {section}{Results}{4}}
-\@writefile{toc}{\contentsline {section}{Discussion}{4}}
-\@writefile{toc}{\contentsline {section}{Acknowledgements}{4}}
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Description and units of variables used to predict parasite occurrences.}}{5}}
-\newlabel{tab:traits}{{1}{5}}
-\@writefile{toc}{\contentsline {section}{Figures}{6}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Image plot with brt model results sorted by parasite type. }}{6}}
-\newlabel{fig:a}{{1}{6}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces BRT RC contributions for each variable, or some kind of plot comparing the results from models trained with host traits/geography, and those trained with parasite community measures? }}{6}}
-\newlabel{fig:b}{{2}{6}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces  }}{6}}
-\newlabel{fig:c}{{3}{6}}
+\bibcite{braga2014}{{1}{2014}{{Braga et~al.}}{{Braga, Razzolini, and Boeger}}}
+\bibcite{dallas2014}{{2}{2014}{{Dallas and Drake}}{{}}}
+\bibcite{dallas2014b}{{3}{2014}{{Dallas and Presley}}{{}}}
+\bibcite{elith2008}{{4}{2008}{{Elith et~al.}}{{Elith, Leathwick, and Hastie}}}
+\bibcite{froese2010}{{5}{2010}{{Froese and Pauly}}{{}}}
+\bibcite{randomForest}{{6}{2002}{{Liaw and Wiener}}{{}}}
+\bibcite{strona2012}{{7}{2012}{{Strona and Lafferty}}{{}}}
+\@writefile{toc}{\contentsline {paragraph}{Was predictive ability influence by parasite specificity, parasite type, or...?}{6}}
+\@writefile{toc}{\contentsline {section}{Discussion}{6}}
+\@writefile{toc}{\contentsline {paragraph}{State most important findings}{6}}
+\@writefile{toc}{\contentsline {paragraph}{what does this mean?}{6}}
+\@writefile{toc}{\contentsline {paragraph}{}{6}}
+\@writefile{toc}{\contentsline {section}{Acknowledgements}{6}}
+\bibcite{strona2013}{{8}{2013}{{Strona et~al.}}{{Strona, Palomares, Bailly, Galli, and Lafferty}}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Description and units of variables used to predict parasite occurrences.}}{8}}
+\newlabel{tab:traits}{{1}{8}}
+\@writefile{toc}{\contentsline {section}{Figures}{9}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Accuracy (Area under Receiver operator characteristic (ROC) curves) for our predictive models incorporating host traits ('HT'), our null model ('Null') that maintained interaction number (number of occurrence records), but assigned occurrences equiprobably among potential interactors.}}{9}}
+\newlabel{fig:brtAccuracy}{{1}{9}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces The average relative contribution values from the boosted regression tree models trained on all available data (left), host trait data (top right), geographic variables (middle right), and parasite community similarity (bottom right). Variables named ``PCA'' are principal components axes, and ``PSR'' refers to parasite species richness. Other variable definitions and units are available in Table 1. }}{10}}
+\newlabel{fig:megaBRT}{{2}{10}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Variation in variable importance as a function of parasite type. Each column represents a model trained on occurrence data for a single parasite species. Variables are sorted by their mean relative importance values across parasite species, but these values vary among parasite species.}}{11}}
+\newlabel{fig:parType}{{3}{11}}
+\@writefile{toc}{\contentsline {section}{Supplementary Material}{12}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Accuracy (Area under Receiver operator characteristic (ROC) curves) for boosted regression models trained using host traits (top left), parasite community similarity (top right), geographic variables (bottom left), and all available data (bottom right) as a function of parasite type ($x$-axis). }}{12}}
+\newlabel{fig:parasite}{{4}{12}}

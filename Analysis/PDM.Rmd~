@@ -40,6 +40,12 @@ I examine the role of parasite group (Acanthocephala, Cestoda, Monogenea, Nemato
 
 
 
+### thorns in my side:
+
+* Absence data aren't true absences. Should I even train on these data if the model treats them as true absences? I think I'm basically treating them as background data, much like MaxEnt. 
+
+
+
 
 
 
@@ -509,35 +515,28 @@ rownames(brtResults.all) = sort(temp4[,1])
 #Calulate other types of accuracy measures
 brt.perfAcc.traits=vector(); brt.perfAcc.geo=vector(); 
 brt.perfAcc.pars=vector(); brt.perfAcc.all=vector(); 
-base.perfAcc=vector()
 
 brt.perferr.traits=vector(); brt.perferr.geo=vector(); 
 brt.perferr.pars=vector(); brt.perferr.all=vector(); 
-base.perferr=vector()
 
 brt.perfmxe.traits=vector(); brt.perfmxe.geo=vector(); 
 brt.perfmxe.pars=vector(); brt.perfmxe.all=vector(); 
-base.perfmxe=vector()
 
 for(z in 1:length(brtModel)){
-    brt.perfAcc.traits[z] = max(unlist(performance(brt.preds[[z]],measure = 'acc')@y.values))
-    brt.perfAcc.geo[z]=max(unlist(performance(brt.preds.geo[[z]],measure = 'acc')@y.values))
-    brt.perfAcc.pars[z]=max(unlist(performance(brt.preds.b[[z]],measure = 'acc')@y.values))
-    brt.perfAcc.all[z]=max(unlist(performance(brt.preds.c[[z]],measure = 'acc')@y.values))
-    base.perfAcc[z]=max(unlist(performance(prediction(sample(presence[-inds], length(presence[-inds])), presence[-inds]), 'acc')@y.values))
+    brt.perfAcc.traits[z] = performance(brt.preds[[z]],measure = 'acc')@y.values
+    brt.perfAcc.geo[z]=performance(brt.preds.geo[[z]],measure = 'acc')@y.values
+    brt.perfAcc.pars[z]=performance(brt.preds.b[[z]],measure = 'acc')@y.values
+    brt.perfAcc.all[z]=performance(brt.preds.c[[z]],measure = 'acc')@y.values
 
-    brt.perferr.traits[z] = min(unlist(performance(brt.preds[[z]],measure = 'err')@y.values))
-    brt.perferr.geo[z]=min(unlist(performance(brt.preds.geo[[z]],measure = 'err')@y.values))
-    brt.perferr.pars[z]=min(unlist(performance(brt.preds.b[[z]],measure = 'err')@y.values))
-    brt.perferr.all[z]=min(unlist(performance(brt.preds.c[[z]],measure = 'err')@y.values))
-    base.perferr[z]=min(unlist(performance(prediction(sample(presence[-inds], length(presence[-inds])), presence[-inds]), 'err')@y.values))
+    brt.perferr.traits[z] = performance(brt.preds[[z]],measure = 'err')@y.values
+    brt.perferr.geo[z]=performance(brt.preds.geo[[z]],measure = 'err')@y.values
+    brt.perferr.pars[z]=performance(brt.preds.b[[z]],measure = 'err')@y.values
+    brt.perferr.all[z]=performance(brt.preds.c[[z]],measure = 'err')@y.values
 
-    brt.perfmxe.traits[z] = max(unlist(performance(brt.preds[[z]],measure = 'prec')@y.values))
-    brt.perfmxe.geo[z]=max(unlist(performance(brt.preds.geo[[z]],measure = 'prec')@y.values))
-    brt.perfmxe.pars[z]=max(unlist(performance(brt.preds.b[[z]],measure = 'prec')@y.values))
-    brt.perfmxe.all[z]=max(unlist(performance(brt.preds.c[[z]],measure = 'prec')@y.values))
-    base.perfmxe[z]=max(unlist(performance(prediction(sample(presence[-inds], length(presence[-inds])), presence[-inds]), 'prec')@y.values))
-
+    brt.perfmxe.traits[z] = performance(brt.preds[[z]],measure = 'prec')@y.values
+    brt.perfmxe.geo[z]=performance(brt.preds.geo[[z]],measure = 'prec')@y.values
+    brt.perfmxe.pars[z]=performance(brt.preds.b[[z]],measure = 'prec')@y.values
+    brt.perfmxe.all[z]=performance(brt.preds.c[[z]],measure = 'prec')@y.values
     
    print(z)
 

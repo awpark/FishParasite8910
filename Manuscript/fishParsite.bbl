@@ -1,13 +1,42 @@
-\begin{thebibliography}{3}
+\begin{thebibliography}{8}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
 
+\bibitem[Braga et~al.(2014)Braga, Razzolini, and Boeger]{braga2014}
+Mariana~P Braga, Emanuel Razzolini, and Walter~A Boeger.
+\newblock Drivers of parasite sharing among neotropical freshwater fishes.
+\newblock \emph{Journal of Animal Ecology}, 2014.
+
+\bibitem[Dallas and Drake(2014)]{dallas2014}
+Tad Dallas and John~M Drake.
+\newblock Relative importance of environmental, geographic, and spatial
+  variables on zooplankton metacommunities.
+\newblock \emph{Ecosphere}, 5\penalty0 (9):\penalty0 art104, 2014.
+
+\bibitem[Dallas and Presley(2014)]{dallas2014b}
+Tad Dallas and Steven~J Presley.
+\newblock Relative importance of host environment, transmission potential and
+  host phylogeny to the structure of parasite metacommunities.
+\newblock \emph{Oikos}, 123\penalty0 (7):\penalty0 866--874, 2014.
+
+\bibitem[Elith et~al.(2008)Elith, Leathwick, and Hastie]{elith2008}
+Jane Elith, John~R Leathwick, and Trevor Hastie.
+\newblock A working guide to boosted regression trees.
+\newblock \emph{Journal of Animal Ecology}, 77\penalty0 (4):\penalty0 802--813,
+  2008.
+
 \bibitem[Froese and Pauly(2010)]{froese2010}
 Rainer Froese and Daniel Pauly.
 \newblock Fishbase, 2010.
+
+\bibitem[Liaw and Wiener(2002)]{randomForest}
+Andy Liaw and Matthew Wiener.
+\newblock Classification and regression by randomforest.
+\newblock \emph{R News}, 2\penalty0 (3):\penalty0 18--22, 2002.
+\newblock URL \url{http://CRAN.R-project.org/doc/Rnews/}.
 
 \bibitem[Strona and Lafferty(2012)]{strona2012}
 Giovanni Strona and Kevin~D Lafferty.
