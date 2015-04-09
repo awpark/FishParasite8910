@@ -16,7 +16,7 @@ bibliography: carp.bib
 ## Load in some data and required packages
 library(rfishbase); library(gbm); library(ROCR); library(e1071); library(randomForest)
 load('/media/drakelab/Lexar/8910Project/Analysis/RdataFiles/pest(reduced).RData')
-load('/media/drakelab/Lexar/8910Project/Analysis/RdataFiles/pest(reduced)2_1.RData')
+load('/media/drakelab/Lexar/8910Project/Analysis/RdataFiles/pest(reduced)2_2.RData')
 ```
 
 
@@ -296,7 +296,7 @@ for(i in 1:length(parPest)){
 
 
 ###### If you want to include parasite richness (or composition) ######
- psr = rowSums(intMat)
+ psr = rowSums(intMat > 0)
 #PCA of parasite communities...otherwise you're including like 500 new variables
 pcaHosts = princomp(intMat[,-which(colnames(intMat)==parPest[i])])$scores
 
@@ -363,7 +363,9 @@ dat = data.frame(psrOut, pcaHostsOut)
 
 
 
-#### Training using all data 
+#### Training using all data
+
+*** Run this model again ***
 
 ```{r, eval=FALSE, echo=F, message=FALSE}
 # storage for model outputs
@@ -377,13 +379,13 @@ rfModel.c=list(); rf.preds.c=list(); rf.perf.c=list(); rf.perfAUC.c=vector()
 
 ## Creating a pointsObject
 #hostPest = unique(pest[,-c(1:3)], MARGIN=1)
-hostPest = pest[,-c(1:3)]
-hostPest[,7:17]=apply(hostPest[,7:17],2, as.numeric)
+hostPest = pest[,c(4:14, 18:20)]
+hostPest[,7:14]=apply(hostPest[,7:14],2, as.numeric)
 parPest = names(which(summary(pest1[,'P_SP'], maxsum=500)>20)); 
 parPest=parPest[-max(length(parPest))]
 
 
-for(i in 229:length(parPest)){
+for(i in 1:length(parPest)){
 #create presence vector
   presence=rep(0, nrow(hostPest))
   presence[which(hostPest[,'P_SP'] == parPest[i])]=1
@@ -621,9 +623,21 @@ for(i in 1:length(stupid)){
 }
 
 plot(hostNum[1:238], ret[1:238,'BRT'], tck=0.01, las=1, xlab='Number host species infected', pch=16, ylab='Accuracy (AUC)')
-points(hostNum[1:238], ret.geo[1:238,'BRT'], pch=16, col='skyblue' )
+
+points(hostNum[1:238], ret.geo[1:238,'BRT'], pch=16, col='skyblue')
 points(hostNum[1:238], ret.b[1:238,'BRT'], pch=16, col='darkseagreen1')
 points(hostNum[1:238], ret.c[1:238,'BRT'], pch=16, col='firebrick3')
+
+lines(smooth.spline(hostNum[1:238], ret[1:238, 'BRT']), lwd=4.25, col=1)
+lines(smooth.spline(hostNum[1:238], ret[1:238, 'BRT']), lwd=3, col=1)
+lines(smooth.spline(hostNum[1:238], ret.geo[1:238, 'BRT']), lwd=4.25, col=1)
+lines(smooth.spline(hostNum[1:238], ret.geo[1:238, 'BRT']), lwd=3, col='skyblue')
+lines(smooth.spline(hostNum[1:238], ret.b[1:238, 'BRT']), lwd=4.25, col=1)
+lines(smooth.spline(hostNum[1:238], ret.b[1:238, 'BRT']), lwd=3, col='darkseagreen1')
+lines(smooth.spline(hostNum[1:238], ret.c[1:238, 'BRT']), lwd=4.25, col=1)
+lines(smooth.spline(hostNum[1:238], ret.c[1:238, 'BRT']), lwd=3, col='firebrick3')
+
+
 abline(h=0.5, col=grey(0.5,0.5), lwd=2, lty=2)
 legend(100, 0.4, c('Host traits', 'Geography', 'Parasite community', 'Full model'), pch=16, col=c(1, 'skyblue','darkseagreen1', 'firebrick3'), bty='n')
 
@@ -778,10 +792,10 @@ brtSD.c = apply(brtResults.all, 1, sd)
 
 inds=order(brtMean.c)
 par(mar=c(3,9,1,1))
-plot(brtMean.c[inds], 1:18, pch=16, xlim=c(0,18), ylim=c(0.75,18.25), las=1, xlab='', ylab='', yaxt='n', col=1, tck=0.01)
+plot(brtMean.c[inds], 1:15, pch=16, xlim=c(0,15), ylim=c(0.75,15.25), las=1, xlab='', ylab='', yaxt='n', col=1, tck=0.01)
 segments(x0=brtMean.c[inds] - brtSE.c[inds], x1=brtMean.c[inds] + brtSE.c[inds], y0=1:18, col=grey(0.5, alpha=0.5),lwd=3)
 mtext("Relative contribution", side=1, line=2)
-axis(2, at=1:18, labels=c('Brackish', 'Marine', 'Freshwater', 'Host growth rate', 'Lifespan', 'Host age at maturity', 'PSR', 'Longitude', 'Area of occupancy', 'Max length', 'Latitude', 'Host trophic level', 'PCA1', 'PCA4', 'PCA5', 'PCA2', 'Geographic region', 'PCA3'),las=1)
+axis(2, at=1:15, labels=c('Host growth rate', 'Lifespan', 'Host age at maturity', 'PSR', 'Longitude', 'Area of occupancy', 'Max length', 'Latitude', 'Host trophic level', 'PCA1', 'PCA4', 'PCA5', 'PCA2', 'Geographic region', 'PCA3'),las=1)
 
 dev.copy(pdf, width=6, height=5, '../Manuscript/Figures/allData.pdf'); dev.off()
 ```
@@ -791,10 +805,10 @@ dev.copy(pdf, width=6, height=5, '../Manuscript/Figures/allData.pdf'); dev.off()
 cols=c('#7EC0EE',  '#32CD32', '#CD3232')
 greycols=c(grey(0.75,0.5), grey(0.25,0.5), 'black')
 #inds=order(brtMean.c)
-inds=c(1,1,1,1,2,1,1,1,2,3,2,3,3,3,3,3,2,2)
+inds=c(1,2,1,1,1,2,3,2,3,3,3,3,3,2,2)
 layout(matrix(c(1,2),ncol=1), heights=c(2.5, 1))
 par(mar=c(0.25,0.25,0.25,0.25))
-barplot(brtResults.all[order(inds),], col=greycols[c(1,1,1,1,1,1,1,2,2,2,2,2,3,3,3,3,3,3)], xaxt='n', axes=FALSE, border = NA)
+barplot(brtResults.all[order(inds),], col=greycols[c(1,1,1,1,2,2,2,2,2,3,3,3,3,3,3)], xaxt='n', axes=FALSE, border = NA)
 plot.new()
 legend(0.02,0.85, c('Host traits', 'Geographic variables', 'Parasite community variables'), col=greycols, ncol=3, pt.cex=2, text.width=c(0, 0.175,0.23), pch=16, bty='n')
 
@@ -825,10 +839,10 @@ brtSD.c = apply(brtResults.all, 1, sd)
 
 inds=order(brtMean.c)
 par(mar=c(3,9,0,0))
-plot(brtMean.c[inds], 1:18, pch=16, xlim=c(0,18), ylim=c(0.75,18.25), las=1, xlab='', ylab='', yaxt='n', col=1, tck=0.01)
-segments(x0=brtMean.c[inds] - brtSE.c[inds], x1=brtMean.c[inds] + brtSE.c[inds], y0=1:18, col=grey(0.5, alpha=0.5),lwd=3)
+plot(brtMean.c[inds], 1:15, pch=16, xlim=c(0,15), ylim=c(0.75,15.25), las=1, xlab='', ylab='', yaxt='n', col=1, tck=0.01)
+segments(x0=brtMean.c[inds] - brtSE.c[inds], x1=brtMean.c[inds] + brtSE.c[inds], y0=1:15, col=grey(0.5, alpha=0.5),lwd=3)
 mtext("Relative contribution", side=1, line=2)
-axis(2, at=1:18, labels=c('Brackish', 'Marine', 'Freshwater', 'Host growth rate', 'Lifespan', 'Host age at maturity', 'PSR', 'Longitude', 'Area of occupancy', 'Max length', 'Latitude', 'Host trophic level', 'PCA1', 'PCA4', 'PCA5', 'PCA2', 'Geographic region', 'PCA3'),las=1)
+axis(2, at=1:15, labels=c('Host growth rate', 'Lifespan', 'Host age at maturity', 'Longitude', 'PSR', 'Area of occupancy', 'Host trophic level', 'Max length', 'Latitude', 'PCA1', 'PCA5', 'PCA4', 'Geographic region', 'PCA2', 'PCA3'),las=1)
 
 
 
@@ -896,7 +910,7 @@ text(105/239, 1, parGroups[4], srt=0)
 text(180/239, 1, parGroups[5], srt=0)
 
 
-legend(0.02,0.85, c('Brackish', 'Marine', 'Freshwater', 'Host growth rate', 'Lifespan', 'Host age at maturity', 'PSR', 'Longitude', 'Area of occupancy', 'Max length', 'Latitude', 'Host trophic level', 'PCA1', 'PCA4', 'PCA5', 'PCA2', 'Geographic region', 'PCA3') , pch=16, col=rainbow(20), ncol=4, pt.cex=2, text.width=0.2)
+legend(0.02,0.85, c('Host growth rate', 'Lifespan', 'Host age at maturity', 'Longitude', 'PSR', 'Area of occupancy', 'Host trophic level', 'Max length', 'Latitude', 'PCA1', 'PCA5', 'PCA4', 'Geographic region', 'PCA2', 'PCA3') , pch=16, col=rainbow(20), ncol=4, pt.cex=2, text.width=0.2)
 
 dev.copy(pdf, width=8, height=5, '../Manuscript/Figures/parTypeColor.pdf'); dev.off()
 ```

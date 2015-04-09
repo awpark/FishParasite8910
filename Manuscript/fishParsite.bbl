@@ -1,68 +1,60 @@
 \begin{thebibliography}{10}
 \providecommand{\natexlab}[1]{#1}
-\providecommand{\url}[1]{\texttt{#1}}
-\expandafter\ifx\csname urlstyle\endcsname\relax
-  \providecommand{\doi}[1]{doi: #1}\else
-  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
 
-\bibitem[Braga et~al.(2014)Braga, Razzolini, and Boeger]{braga2014}
-Mariana~P Braga, Emanuel Razzolini, and Walter~A Boeger.
+\bibitem[{Braga et~al.(2014)Braga, Razzolini, and Boeger}]{braga2014}
+Braga, M.~P., E.~Razzolini, and W.~A. Boeger. 2014.
 \newblock Drivers of parasite sharing among neotropical freshwater fishes.
-\newblock \emph{Journal of Animal Ecology}, 2014.
+\newblock Journal of Animal Ecology .
 
-\bibitem[Dallas and Drake(2014)]{dallas2014}
-Tad Dallas and John~M Drake.
+\bibitem[{Dallas and Drake(2014)}]{dallas2014}
+Dallas, T., and J.~M. Drake. 2014.
 \newblock Relative importance of environmental, geographic, and spatial
   variables on zooplankton metacommunities.
-\newblock \emph{Ecosphere}, 5\penalty0 (9):\penalty0 art104, 2014.
+\newblock Ecosphere 5:art104.
 
-\bibitem[Dallas and Presley(2014)]{dallas2014b}
-Tad Dallas and Steven~J Presley.
+\bibitem[{Dallas and Presley(2014)}]{dallas2014b}
+Dallas, T., and S.~J. Presley. 2014.
 \newblock Relative importance of host environment, transmission potential and
   host phylogeny to the structure of parasite metacommunities.
-\newblock \emph{Oikos}, 123\penalty0 (7):\penalty0 866--874, 2014.
+\newblock Oikos 123:866--874.
 
-\bibitem[Elith et~al.(2008)Elith, Leathwick, and Hastie]{elith2008}
-Jane Elith, John~R Leathwick, and Trevor Hastie.
+\bibitem[{Elith et~al.(2008)Elith, Leathwick, and Hastie}]{elith2008}
+Elith, J., J.~R. Leathwick, and T.~Hastie. 2008.
 \newblock A working guide to boosted regression trees.
-\newblock \emph{Journal of Animal Ecology}, 77\penalty0 (4):\penalty0 802--813,
-  2008.
+\newblock Journal of Animal Ecology 77:802--813.
 
-\bibitem[Froese and Pauly(2010)]{froese2010}
-Rainer Froese and Daniel Pauly.
-\newblock Fishbase, 2010.
+\bibitem[{Froese and Pauly(2010)}]{froese2010}
+Froese, R., and D.~Pauly. 2010.
+\newblock Fishbase.
 
-\bibitem[Gibson et~al.(2005)Gibson, Bray, and Harris]{gibson2005}
-DI~Gibson, RA~Bray, and EA~Harris.
+\bibitem[{Gibson et~al.(2005)Gibson, Bray, and Harris}]{gibson2005}
+Gibson, D., R.~Bray, and E.~Harris. 2005.
 \newblock Host-parasite database of the natural history museum, london.
-\newblock \emph{URL http://www. nhm. ac.
+\newblock URL http://www. nhm. ac.
   uk/research-curation/scientific-resources/taxonomy-systematics/host-parasites/database/index.
-  jsp}, 2005.
+  jsp .
 
-\bibitem[Liaw and Wiener(2002)]{randomForest}
-Andy Liaw and Matthew Wiener.
+\bibitem[{Liaw and Wiener(2002)}]{randomForest}
+Liaw, A., and M.~Wiener. 2002.
 \newblock Classification and regression by randomforest.
-\newblock \emph{R News}, 2\penalty0 (3):\penalty0 18--22, 2002.
-\newblock URL \url{http://CRAN.R-project.org/doc/Rnews/}.
+\newblock R News 2:18--22.
 
-\bibitem[Nunn and Altizer(2005)]{nunn2005}
-Charles~L Nunn and Sonia~M Altizer.
+\bibitem[{Nunn and Altizer(2005)}]{nunn2005}
+Nunn, C.~L., and S.~M. Altizer. 2005.
 \newblock The global mammal parasite database: an online resource for
   infectious disease records in wild primates.
-\newblock \emph{Evolutionary Anthropology: Issues, News, and Reviews},
-  14\penalty0 (1):\penalty0 1--2, 2005.
+\newblock Evolutionary Anthropology: Issues, News, and Reviews 14:1--2.
 
-\bibitem[Strona and Lafferty(2012)]{strona2012}
-Giovanni Strona and Kevin~D Lafferty.
+\bibitem[{Strona and Lafferty(2012)}]{strona2012}
+Strona, G., and K.~D. Lafferty. 2012.
 \newblock {FishPEST}: an innovative software suite for fish parasitologists.
-\newblock \emph{Trends in parasitology}, 28\penalty0 (4):\penalty0 123, 2012.
+\newblock Trends in parasitology 28:123.
 
-\bibitem[Strona et~al.(2013)Strona, Palomares, Bailly, Galli, and
-  Lafferty]{strona2013}
-Giovanni Strona, Maria Lourdes~D Palomares, Nicolas Bailly, Paolo Galli, and
-  Kevin~D Lafferty.
+\bibitem[{Strona et~al.(2013)Strona, Palomares, Bailly, Galli, and
+  Lafferty}]{strona2013}
+Strona, G., M.~L.~D. Palomares, N.~Bailly, P.~Galli, and K.~D. Lafferty. 2013.
 \newblock Host range, host ecology, and distribution of more than 11 800 fish
   parasite species: Ecological archives e094-045.
-\newblock \emph{Ecology}, 94\penalty0 (2):\penalty0 544--544, 2013.
+\newblock Ecology 94:544--544.
 
 \end{thebibliography}

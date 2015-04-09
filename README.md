@@ -8,9 +8,13 @@
 
 ### Goals:
 
-I want to be able to predict parasite occurrences given a set of host species. To do this, I aim to apply different machine learning algorithms (SVM, BRT, random forest), more traditional methods (logistic regression), and (maybe) develop a method using density ratio estimation to determine predictive accuracy of trained models, and perhaps provide information on which host traits are most informative to predict parasite occurrences.
+* To predict parasite occurrence among a suite of potential host species for a large number of freshwater fish parasites. 
 
-This is super general, but I plan to make it a bit more targeted soon. 
+* To determine the relative importance of geography, host traits, and parasite community structure in constraining what hosts a parasite infects.
+
+Supplement:
+
+* To determine how predictive power varies as a function of parasite taxonomy or host specificity. 
 
 
 
