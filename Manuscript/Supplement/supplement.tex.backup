@@ -23,12 +23,12 @@ What controls the range of hosts a fish parasite infects?}
 
 \maketitle{}
 
-\section{Does predictive ability systematically differ?}
+\section{Does parasite taxonomy or host specificity influence predictive accuracy?}
 
-Parasite type, host specificify, other factors? 
+We investigated if model predictive accuracy was biased by either parasite specificity (number of hosts), or type (taxonomic group). 
 
 
-What about host trait diversity? 
+
 
 
 
@@ -36,11 +36,21 @@ What about host trait diversity?
 \section{Figures}
 \begin{figure}[h]
   \includegraphics[width=\textwidth]{../Figures/parAccuracy.pdf}
-  \caption{Accuracy (Area under Receiver operating characteristic (ROC) curves) for boosted regression models trained using host traits (top left), parasite community similarity (top right), geographic variables (bottom left), and all available data (bottom right) as a function of parasite type ($x$-axis).   }
+  \caption{Accuracy (Area under Receiver operating characteristic (ROC) curves) for boosted regression models trained using host traits (top left), parasite community similarity (top right), geographic variables (bottom left), and all available data (bottom right) as a function of parasite type ($x$-axis). }
  \label{fig:parAUC}
  \end{figure}
 
  
+  
+ 
+ \newpage
+ \begin{figure}[h!]
+  \includegraphics[width=\textwidth]{../Figures/parTypeColor.pdf}
+  \caption{Variation in variable importance as a function of parasite type. Each column represents a model trained on occurrence data for a single parasite species. Variables are sorted by their mean relative importance values across parasite species, but these values vary among parasite species.}
+ \label{fig:parType}
+ \end{figure}
+
+
  
  
 \begin{figure}[h]

@@ -1,10 +1,36 @@
-\begin{thebibliography}{10}
+\begin{thebibliography}{33}
 \providecommand{\natexlab}[1]{#1}
+
+\bibitem[{Arneberg(2002)}]{arneberg2002}
+Arneberg, P. 2002.
+\newblock Host population density and body mass as determinants of species
+  richness in parasite communities: comparative analyses of directly
+  transmitted nematodes of mammals.
+\newblock Ecography 25:88--94.
 
 \bibitem[{Braga et~al.(2014)Braga, Razzolini, and Boeger}]{braga2014}
 Braga, M.~P., E.~Razzolini, and W.~A. Boeger. 2014.
 \newblock Drivers of parasite sharing among neotropical freshwater fishes.
 \newblock Journal of Animal Ecology .
+
+\bibitem[{Britton(2013)}]{britton2013}
+Britton, J.~R. 2013.
+\newblock Introduced parasites in food webs: new species, shifting structures?
+\newblock Trends in Ecology \& Evolution 28:93--99.
+
+\bibitem[{Canard et~al.(2014)Canard, Mouquet, Mouillot, Stanko, Miklisova, and
+  Gravel}]{canard2014}
+Canard, E., N.~Mouquet, D.~Mouillot, M.~Stanko, D.~Miklisova, and D.~Gravel.
+  2014.
+\newblock Empirical evaluation of neutral interactions in host-parasite
+  networks.
+\newblock The American Naturalist 183:468--479.
+
+\bibitem[{Colautti et~al.(2004)Colautti, Ricciardi, Grigorovich, and
+  MacIsaac}]{colautti2004}
+Colautti, R.~I., A.~Ricciardi, I.~A. Grigorovich, and H.~J. MacIsaac. 2004.
+\newblock Is invasion success explained by the enemy release hypothesis?
+\newblock Ecology letters 7:721--733.
 
 \bibitem[{Dallas and Drake(2014)}]{dallas2014}
 Dallas, T., and J.~M. Drake. 2014.
@@ -18,10 +44,23 @@ Dallas, T., and S.~J. Presley. 2014.
   host phylogeny to the structure of parasite metacommunities.
 \newblock Oikos 123:866--874.
 
+\bibitem[{Daszak et~al.(2000)Daszak, Cunningham, and Hyatt}]{daszak2000}
+Daszak, P., A.~A. Cunningham, and A.~D. Hyatt. 2000.
+\newblock Emerging infectious diseases of wildlife--threats to biodiversity and
+  human health.
+\newblock Science 287:443--449.
+
 \bibitem[{Elith et~al.(2008)Elith, Leathwick, and Hastie}]{elith2008}
 Elith, J., J.~R. Leathwick, and T.~Hastie. 2008.
 \newblock A working guide to boosted regression trees.
 \newblock Journal of Animal Ecology 77:802--813.
+
+\bibitem[{Ezenwa et~al.(2006)Ezenwa, Price, Altizer, Vitone, and
+  Cook}]{ezenwa2006}
+Ezenwa, V.~O., S.~A. Price, S.~Altizer, N.~D. Vitone, and K.~C. Cook. 2006.
+\newblock Host traits and parasite species richness in even and odd-toed hoofed
+  mammals, artiodactyla and perissodactyla.
+\newblock Oikos 115:526--536.
 
 \bibitem[{Froese and Pauly(2010)}]{froese2010}
 Froese, R., and D.~Pauly. 2010.
@@ -34,10 +73,67 @@ Gibson, D., R.~Bray, and E.~Harris. 2005.
   uk/research-curation/scientific-resources/taxonomy-systematics/host-parasites/database/index.
   jsp .
 
+\bibitem[{Gu{\'e}gan and Hugueny(1994)}]{guegan1994}
+Gu{\'e}gan, J.-F., and B.~Hugueny. 1994.
+\newblock A nested parasite species subset pattern in tropical fish: host as
+  major determinant of parasite infracommunity structure.
+\newblock Oecologia 100:184--189.
+
+\bibitem[{Johnson et~al.(2012)Johnson, Rohr, Hoverman, Kellermanns, Bowerman,
+  and Lunde}]{johnson2012}
+Johnson, P.~T., J.~R. Rohr, J.~T. Hoverman, E.~Kellermanns, J.~Bowerman, and
+  K.~B. Lunde. 2012.
+\newblock Living fast and dying of infection: host life history drives
+  interspecific variation in infection and disease risk.
+\newblock Ecology Letters 15:235--242.
+
+\bibitem[{Kennedy(2009)}]{kennedy2009}
+Kennedy, C. 2009.
+\newblock The ecology of parasites of freshwater fishes: the search for
+  patterns.
+\newblock Parasitology 136:1653--1662.
+
+\bibitem[{Krasnov et~al.(2012)Krasnov, Fortuna, Mouillot, Khokhlova, Shenbrot,
+  and Poulin}]{krasnov2012}
+Krasnov, B.~R., M.~A. Fortuna, D.~Mouillot, I.~S. Khokhlova, G.~I. Shenbrot,
+  and R.~Poulin. 2012.
+\newblock Phylogenetic signal in module composition and species connectivity in
+  compartmentalized host-parasite networks.
+\newblock The American Naturalist 179:501--511.
+
 \bibitem[{Liaw and Wiener(2002)}]{randomForest}
 Liaw, A., and M.~Wiener. 2002.
 \newblock Classification and regression by randomforest.
 \newblock R News 2:18--22.
+
+\bibitem[{Locke et~al.(2012)Locke, Levy, Marcogliese, Ackerman, and
+  McLaughlin}]{locke2012}
+Locke, S.~A., M.~S. Levy, D.~J. Marcogliese, S.~Ackerman, and J.~D. McLaughlin.
+  2012.
+\newblock The decay of parasite community similarity in ring-billed gulls larus
+  delawarensis and other hosts.
+\newblock Ecography 35:530--538.
+
+\bibitem[{Locke et~al.(2013)Locke, McLaughlin, and Marcogliese}]{locke2013}
+Locke, S.~A., J.~D. McLaughlin, and D.~J. Marcogliese. 2013.
+\newblock Predicting the similarity of parasite communities in freshwater
+  fishes using the phylogeny, ecology and proximity of hosts.
+\newblock Oikos 122:73--83.
+
+\bibitem[{Nieberding et~al.(2008)Nieberding, Durette-Desset, Vanderpoorten,
+  Casanova, Ribas, Deffontaine, Feliu, Morand, Libois, and
+  Michaux}]{nieberding2008}
+Nieberding, C.~M., M.-C. Durette-Desset, A.~Vanderpoorten, J.~C. Casanova,
+  A.~Ribas, V.~Deffontaine, C.~Feliu, S.~Morand, R.~Libois, and J.~R. Michaux.
+  2008.
+\newblock Geography and host biogeography matter for understanding the
+  phylogeography of a parasite.
+\newblock Molecular phylogenetics and evolution 47:538--554.
+
+\bibitem[{Nunn et~al.(2003)Nunn, Altizer, Jones, and Sechrest}]{nunn2003}
+Nunn, C.~L., S.~Altizer, K.~E. Jones, and W.~Sechrest. 2003.
+\newblock Comparative tests of parasite species richness in primates.
+\newblock The American Naturalist 162:597--614.
 
 \bibitem[{Nunn and Altizer(2005)}]{nunn2005}
 Nunn, C.~L., and S.~M. Altizer. 2005.
@@ -45,16 +141,67 @@ Nunn, C.~L., and S.~M. Altizer. 2005.
   infectious disease records in wild primates.
 \newblock Evolutionary Anthropology: Issues, News, and Reviews 14:1--2.
 
-\bibitem[{Strona and Lafferty(2012)}]{strona2012}
-Strona, G., and K.~D. Lafferty. 2012.
+\bibitem[{Poulin(2003)}]{poulin2003}
+Poulin, R. 2003.
+\newblock The decay of similarity with geographical distance in parasite
+  communities of vertebrate hosts.
+\newblock Journal of Biogeography 30:1609--1615.
+
+\bibitem[{Poulin(2010)}]{poulin2010}
+---{}---{}---. 2010.
+\newblock Network analysis shining light on parasite ecology and diversity.
+\newblock Trends in Parasitology 26:492--498.
+
+\bibitem[{Poulin(2011)}]{poulin2011}
+---{}---{}---. 2011.
+\newblock Evolutionary ecology of parasites.
+\newblock Princeton university press.
+
+\bibitem[{Poulin and Rohde(1997)}]{poulin1997}
+Poulin, R., and K.~Rohde. 1997.
+\newblock Comparing the richness of metazoan ectoparasite communities of marine
+  fishes: controlling for host phylogeny.
+\newblock Oecologia 110:278--283.
+
+\bibitem[{Price(1990)}]{price1990}
+Price, P.~W. 1990.
+\newblock Host populations as resources defining parasite community
+  organization.
+\newblock Pages 21--40 \emph{in} Parasite communities: patterns and processes.
+  Springer.
+
+\bibitem[{Rohde(1993)}]{rohde1993}
+Rohde, K. 1993.
+\newblock Niche restriction in parasites: Proximate and ultimate causes.
+\newblock Parasitology 109:S69--84.
+
+\bibitem[{Rohr et~al.(2013)Rohr, Naisbit, Mazza, and Bersier}]{rohr2013}
+Rohr, R.~P., R.~E. Naisbit, C.~Mazza, and L.-F. Bersier. 2013.
+\newblock Matching-centrality decomposition and the forecasting of new links in
+  networks.
+\newblock arXiv preprint arXiv:1310.4633 .
+
+\bibitem[{Strona and Lafferty(2012{\natexlab{\emph{a}}})}]{strona2012}
+Strona, G., and K.~D. Lafferty. 2012{\natexlab{\emph{a}}}.
 \newblock {FishPEST}: an innovative software suite for fish parasitologists.
 \newblock Trends in parasitology 28:123.
+
+\bibitem[{Strona and Lafferty(2012{\natexlab{\emph{b}}})}]{strona2012panic}
+---{}---{}---. 2012{\natexlab{\emph{b}}}.
+\newblock How to catch a parasite: parasite niche modeler (panic) meets
+  fishbase.
+\newblock Ecography 35:481--486.
 
 \bibitem[{Strona et~al.(2013)Strona, Palomares, Bailly, Galli, and
   Lafferty}]{strona2013}
 Strona, G., M.~L.~D. Palomares, N.~Bailly, P.~Galli, and K.~D. Lafferty. 2013.
-\newblock Host range, host ecology, and distribution of more than 11 800 fish
+\newblock Host range, host ecology, and distribution of more than 11,800 fish
   parasite species: Ecological archives e094-045.
 \newblock Ecology 94:544--544.
+
+\bibitem[{Zuk and Stoehr(2002)}]{zuk2002}
+Zuk, M., and A.~M. Stoehr. 2002.
+\newblock Immune defense and host life history.
+\newblock The American Naturalist 160:S9--S22.
 
 \end{thebibliography}

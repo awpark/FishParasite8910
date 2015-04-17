@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.10.14)  9 APR 2015 15:48
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.10.14)  17 APR 2015 11:44
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -181,60 +181,21 @@ LaTeX Info: Thecontrolsequence`\]'isalreadyrobust on input line 129.
 (/usr/share/texlive/texmf-dist/tex/latex/setspace/setspace.sty
 Package: setspace 2011/12/19 v6.7a set line spacing
 )
-(/usr/share/texlive/texmf-dist/tex/latex/ms/ragged2e.sty
-Package: ragged2e 2009/05/21 v2.1 ragged2e Package (MS)
-
-
-LaTeX Warning: Command \@arrayparboxrestore  has changed.
-               Check if current package is valid.
-
-(/usr/share/texlive/texmf-dist/tex/latex/ms/everysel.sty
-Package: everysel 2011/10/28 v1.2 EverySelectfont Package (MS)
-)
-(/usr/share/texlive/texmf-dist/tex/latex/footmisc/footmisc.sty
-Package: footmisc 2011/06/06 v5.5b a miscellany of footnote facilities
-\FN@temptoken=\toks21
-\footnotemargin=\dimen131
-\c@pp@next@reset=\count108
-Package footmisc Info: Declaring symbol style bringhurst on input line 855.
-Package footmisc Info: Declaring symbol style chicago on input line 863.
-Package footmisc Info: Declaring symbol style wiley on input line 872.
-Package footmisc Info: Declaring symbol style lamport-robust on input line 883.
-
-Package footmisc Info: Declaring symbol style lamport* on input line 903.
-Package footmisc Info: Declaring symbol style lamport*-robust on input line 924
-.
-)
-\CenteringLeftskip=\skip52
-\RaggedLeftLeftskip=\skip53
-\RaggedRightLeftskip=\skip54
-\CenteringRightskip=\skip55
-\RaggedLeftRightskip=\skip56
-\RaggedRightRightskip=\skip57
-\CenteringParfillskip=\skip58
-\RaggedLeftParfillskip=\skip59
-\RaggedRightParfillskip=\skip60
-\JustifyingParfillskip=\skip61
-\CenteringParindent=\skip62
-\RaggedLeftParindent=\skip63
-\RaggedRightParindent=\skip64
-\JustifyingParindent=\skip65
-)
 (/usr/share/texlive/texmf-dist/tex/latex/lineno/lineno.sty
 Package: lineno 2005/11/02 line numbers on paragraphs v4.41
-\linenopenalty=\count109
-\output=\toks22
-\linenoprevgraf=\count110
-\linenumbersep=\dimen132
-\linenumberwidth=\dimen133
-\c@linenumber=\count111
-\c@pagewiselinenumber=\count112
-\c@LN@truepage=\count113
-\c@internallinenumber=\count114
-\c@internallinenumbers=\count115
-\quotelinenumbersep=\dimen134
-\bframerule=\dimen135
-\bframesep=\dimen136
+\linenopenalty=\count108
+\output=\toks21
+\linenoprevgraf=\count109
+\linenumbersep=\dimen131
+\linenumberwidth=\dimen132
+\c@linenumber=\count110
+\c@pagewiselinenumber=\count111
+\c@LN@truepage=\count112
+\c@internallinenumber=\count113
+\c@internallinenumbers=\count114
+\quotelinenumbersep=\dimen133
+\bframerule=\dimen134
+\bframesep=\dimen135
 \bframebox=\box28
 LaTeX Info: Redefining \\ on input line 3056.
 )
@@ -243,18 +204,18 @@ Package: gensymb 2003/07/02 v1.0 (WaS)
 ) (./fishParsite.aux)
 \openout1 = `fishParsite.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -292,54 +253,48 @@ LaTeX Font Info:    ... okay on input line 17.
 
 (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count116
-\scratchdimen=\dimen137
+\scratchcounter=\count115
+\scratchdimen=\dimen136
 \scratchbox=\box29
-\nofMPsegments=\count117
-\nofMParguments=\count118
-\everyMPshowfont=\toks23
-\MPscratchCnt=\count119
-\MPscratchDim=\dimen138
-\MPnumerator=\count120
-\makeMPintoPDFobject=\count121
-\everyMPtoPDFconversion=\toks24
+\nofMPsegments=\count116
+\nofMParguments=\count117
+\everyMPshowfont=\toks22
+\MPscratchCnt=\count118
+\MPscratchDim=\dimen137
+\MPnumerator=\count119
+\makeMPintoPDFobject=\count120
+\everyMPtoPDFconversion=\toks23
 )
-Package ragged2e Info: ABD: executing \RaggedRight on input line 17.
- ABD: EverySelectfont initializing macros
-LaTeX Info: Redefining \selectfont on input line 17.
-LaTeX Info: Redefining \celsius on input line 17.
-Package gensymb Info: Faking symbols for \degree and \celsius on input line 17.
+LaTeX Info: Redefining \celsius on input line 19.
+Package gensymb Info: Faking symbols for \degree and \celsius on input line 19.
 
 
 
 Package gensymb Warning: Not defining \perthousand.
 
-LaTeX Info: Redefining \ohm on input line 17.
-Package gensymb Info: Using \Omega for \ohm on input line 17.
+LaTeX Info: Redefining \ohm on input line 19.
+Package gensymb Info: Using \Omega for \ohm on input line 19.
 
 Package gensymb Warning: Not defining \micro.
 
+
+Underfull \hbox (badness 10000) in paragraph at lines 48--49
+
+ []
+
 [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2]
-Overfull \hbox (13.56339pt too wide) in paragraph at lines 98--99
-\OT1/cmr/m/n/12 tions (here-after re-ferred to as Fish-Pest; citep-strona2013) 
-con-sist-ing of over 38000 helminth 
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+Underfull \hbox (badness 10000) in paragraph at lines 53--54
+
  []
 
+[2]
+Underfull \hbox (badness 10000) in paragraph at lines 68--69
 
-Overfull \hbox (5.72595pt too wide) in paragraph at lines 98--99
-\OT1/cmr/m/n/12 par-a-site records span-ning a large di-ver-sity of par-a-sites
- (Acan-tho-cephala, Ces-toda, Mono- 
  []
 
-
-Overfull \hbox (5.9218pt too wide) in paragraph at lines 100--101
-[]\OT1/cmr/m/n/12 Values of pre-dic-tor vari-ables were ob-tained largely throu
-gh the Fish-Pest database Strona 
- []
-
-[3]
+[3] [4]
 Missing character: There is no ‚ in font cmr12!
 Missing character: There is no Ä in font cmr12!
 Missing character: There is no ú in font cmr12!
@@ -352,53 +307,86 @@ Missing character: There is no ú in font cmr12!
 Missing character: There is no ‚ in font cmr12!
 Missing character: There is no Ä in font cmr12!
 Missing character: There is no ù in font cmr12!
- [4] [5] [6] (./fishParsite.bbl [7]) [8]
-Overfull \hbox (62.02875pt too wide) in paragraph at lines 169--190
-[][] 
+
+Underfull \hbox (badness 10000) in paragraph at lines 74--75
+
  []
 
-[9] <Figures/brtAccuracy.pdf, id=39, 259.97125pt x 259.97125pt>
+
+Underfull \hbox (badness 10000) in paragraph at lines 76--77
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 78--79
+
+ []
+
+[5]
+Underfull \hbox (badness 10000) in paragraph at lines 86--87
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 88--89
+
+ []
+
+[6]
+Underfull \hbox (badness 10000) in paragraph at lines 99--100
+
+ []
+
+[7] [8] (./fishParsite.bbl [9] [10] [11]) [12]
+Overfull \hbox (62.02875pt too wide) in paragraph at lines 128--148
+[][]
+ []
+
+[13] <Figures/brtAccuracy.pdf, id=55, 259.97125pt x 259.97125pt>
 File: Figures/brtAccuracy.pdf Graphic file (type pdf)
 
 <use Figures/brtAccuracy.pdf>
-Package pdftex.def Info: Figures/brtAccuracy.pdf used on input line 201.
+Package pdftex.def Info: Figures/brtAccuracy.pdf used on input line 158.
 (pdftex.def)             Requested size: 452.9679pt x 452.96912pt.
- [10 <./Figures/brtAccuracy.pdf>]
-<Figures/megaBRT.pdf, id=49, 433.62pt x 289.08pt>
+ [14 <./Figures/brtAccuracy.pdf>]
+<Figures/megaBRT.pdf, id=65, 433.62pt x 289.08pt>
 File: Figures/megaBRT.pdf Graphic file (type pdf)
  <use Figures/megaBRT.pdf>
-Package pdftex.def Info: Figures/megaBRT.pdf used on input line 208.
+Package pdftex.def Info: Figures/megaBRT.pdf used on input line 168.
 (pdftex.def)             Requested size: 452.9679pt x 301.99469pt.
 
-[11 <./Figures/megaBRT.pdf>]
-<Figures/allDataColorGS.pdf, id=62, 505.89pt x 361.35pt>
-File: Figures/allDataColorGS.pdf Graphic file (type pdf)
+[15 <./Figures/megaBRT.pdf>]
+<Figures/allDataColorGS1.pdf, id=78, 505.89pt x 361.35pt>
+File: Figures/allDataColorGS1.pdf Graphic file (type pdf)
 
-<use Figures/allDataColorGS.pdf>
-Package pdftex.def Info: Figures/allDataColorGS.pdf used on input line 216.
+<use Figures/allDataColorGS1.pdf>
+Package pdftex.def Info: Figures/allDataColorGS1.pdf used on input line 177.
 (pdftex.def)             Requested size: 452.9679pt x 323.55235pt.
- [12 <./Figures/allDataColorGS.pdf>]
+ [16 <./Figures/allDataColorGS1.pdf>]
 (./fishParsite.aux) ) 
 Here is how much of TeX's memory you used:
- 3615 strings out of 495032
- 50481 string characters out of 6181717
- 117343 words of memory out of 5000000
- 6789 multiletter control sequences out of 15000+600000
- 8432 words of font info for 31 fonts, out of 8000000 for 9000
+ 3514 strings out of 495032
+ 48655 string characters out of 6181717
+ 117331 words of memory out of 5000000
+ 6698 multiletter control sequences out of 15000+600000
+ 10442 words of font info for 38 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 27i,9n,32p,1586b,234s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 27i,9n,32p,2167b,282s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
 /cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-mi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pf
-b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr
-/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/t
-exlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/share/texlive/
-texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-
-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fo
-nts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on fishParsite.pdf (12 pages, 158753 bytes).
+mi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.p
+fb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></us
+r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share
+/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texliv
+e/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-
+dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/share/texlive/texmf-dist/fo
+nts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/ty
+pe1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/pub
+lic/amsfonts/cm/cmti12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmtt12.pfb>
+Output written on fishParsite.pdf (16 pages, 214595 bytes).
 PDF statistics:
- 103 PDF objects out of 1000 (max. 8388607)
+ 143 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  16 words of extra memory for PDF output out of 10000 (max. 10000000)
 

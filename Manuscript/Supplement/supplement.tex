@@ -22,21 +22,22 @@ What controls the range of hosts a fish parasite infects?}
  
 
 \maketitle{}
+\doublespacing
 
 \section{Does parasite taxonomy or host specificity influence predictive accuracy?}
 
-No, not really. 
+We investigated if model predictive accuracy was biased by either parasite specificity (number of hosts), or type (taxonomic group). We found no evidence that parasite taxonomic group influenced predictive accuracy for models trained on host traits, parasite community structure, geographic variables, or the full model (Figure \ref{fig:parAUC}). Further, there was no percievable difference in the relative contributions of each predictor variable across parasites of different taxonomic group (Figure \ref{fig:parType}). Lastly, parasite specificity, defined as the number of unique hosts a single parasite species infects, only slightly influenced model predictive accuracy (Figure \ref{fig:HostNum}). Predictive accuracy became more variable with decreasing parasite specificity, but the mean accuracy remained unchanged over the range of parasite specificity values. 
 
 
 
 
 
-
+ \newpage
 
 \section{Figures}
 \begin{figure}[h]
   \includegraphics[width=\textwidth]{../Figures/parAccuracy.pdf}
-  \caption{Accuracy (Area under Receiver operating characteristic (ROC) curves) for boosted regression models trained using host traits (top left), parasite community similarity (top right), geographic variables (bottom left), and all available data (bottom right) as a function of parasite type ($x$-axis).   }
+  \caption{Accuracy (Area under Receiver operating characteristic (ROC) curves) for boosted regression models trained using host traits (top left), parasite community similarity (top right), geographic variables (bottom left), and all available data (bottom right) as a function of parasite type ($x$-axis). }
  \label{fig:parAUC}
  \end{figure}
 
@@ -55,7 +56,7 @@ No, not really.
  
 \begin{figure}[h]
   \includegraphics[width=\textwidth]{../Figures/hostNumAccuracy.pdf}
-  \caption{Accuracy (Area under Receiver operating characteristic (ROC) curves) for boosted regression models trained using host traits, parasite community similarity, geographic variables, and all available data as a function of the number of hosts the parasite species was collected on ($x$-axis). This host range estimate was uncorrelated to accuracy, though some models trained on host traits (black dots) performed poorly when parasite species were specific to a smaller number of host species. }
+  \caption{Accuracy (Area under Receiver operating characteristic (ROC) curves) for boosted regression models trained using host traits, parasite community similarity, geographic variables, and all available data as a function of the number of hosts the parasite species was collected on ($x$-axis). This host range estimate was uncorrelated to accuracy, though some models trained on host traits (black dots) performed poorly when parasite species were specific to a smaller number of host species. Lines correspond to fitted splines (spar = 0.5, to restrict possibility of ``oversmoothing''). }
  \label{fig:HostNum}
  \end{figure}
 

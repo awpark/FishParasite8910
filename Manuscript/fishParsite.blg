@@ -5,45 +5,45 @@ The style file: amnat.bst
 Database file #1: carp.bib.bib
 Warning--I didn't find a database entry for ""
 Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
-You've used 10 entries,
+You've used 33 entries,
             3251 wiz_defined-function locations,
-            716 strings with 6545 characters,
-and the built_in function-call counts, 5638 in all, are:
-= -- 481
-> -- 264
-< -- 6
-+ -- 92
-- -- 78
-* -- 403
-:= -- 937
-add.period$ -- 39
-call.type$ -- 10
-change.case$ -- 76
-chr.to.int$ -- 10
-cite$ -- 10
-duplicate$ -- 408
-empty$ -- 387
-format.name$ -- 120
-if$ -- 1102
-int.to.chr$ -- 1
+            856 strings with 10701 characters,
+and the built_in function-call counts, 20010 in all, are:
+= -- 1702
+> -- 973
+< -- 19
++ -- 340
+- -- 294
+* -- 1418
+:= -- 3286
+add.period$ -- 132
+call.type$ -- 33
+change.case$ -- 264
+chr.to.int$ -- 32
+cite$ -- 33
+duplicate$ -- 1417
+empty$ -- 1399
+format.name$ -- 397
+if$ -- 3946
+int.to.chr$ -- 2
 int.to.str$ -- 1
-missing$ -- 79
-newline$ -- 53
-num.names$ -- 40
-pop$ -- 164
+missing$ -- 286
+newline$ -- 168
+num.names$ -- 132
+pop$ -- 553
 preamble$ -- 1
-purify$ -- 66
+purify$ -- 230
 quote$ -- 0
-skip$ -- 128
+skip$ -- 428
 stack$ -- 0
-substring$ -- 244
-swap$ -- 179
-text.length$ -- 0
+substring$ -- 1017
+swap$ -- 633
+text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 90
+type$ -- 294
 warning$ -- 0
-while$ -- 41
+while$ -- 153
 width$ -- 0
-write$ -- 128
+write$ -- 426
 (There was 1 warning)
