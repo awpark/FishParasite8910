@@ -1,53 +1,51 @@
 This is BibTeX, Version 0.99d (TeX Live 2013/Debian)
 Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: fishParsite.aux
-The style file: amnat.bst
+The style file: prsb.bst
 Database file #1: carp.bib.bib
 Repeated entry---line 372 of file carp.bib.bib
  : @incollection{poulin2011
  :                         ,
 I'm skipping whatever remains of this entry
-Warning--I didn't find a database entry for ""
-Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
 You've used 38 entries,
-            3251 wiz_defined-function locations,
-            887 strings with 11385 characters,
-and the built_in function-call counts, 22883 in all, are:
-= -- 1965
-> -- 1066
-< -- 24
-+ -- 372
-- -- 321
-* -- 1592
-:= -- 3749
-add.period$ -- 153
+            2427 wiz_defined-function locations,
+            760 strings with 10798 characters,
+and the built_in function-call counts, 14269 in all, are:
+= -- 994
+> -- 428
+< -- 2
++ -- 352
+- -- 107
+* -- 797
+:= -- 1587
+add.period$ -- 78
 call.type$ -- 38
-change.case$ -- 300
-chr.to.int$ -- 37
+change.case$ -- 41
+chr.to.int$ -- 0
 cite$ -- 38
-duplicate$ -- 1630
-empty$ -- 1630
-format.name$ -- 435
-if$ -- 4539
-int.to.chr$ -- 2
-int.to.str$ -- 1
-missing$ -- 325
-newline$ -- 193
-num.names$ -- 152
-pop$ -- 626
+duplicate$ -- 1452
+empty$ -- 1402
+format.name$ -- 134
+if$ -- 3048
+int.to.chr$ -- 0
+int.to.str$ -- 38
+missing$ -- 403
+newline$ -- 158
+num.names$ -- 38
+pop$ -- 689
 preamble$ -- 1
-purify$ -- 259
+purify$ -- 0
 quote$ -- 0
-skip$ -- 507
+skip$ -- 291
 stack$ -- 0
-substring$ -- 1191
-swap$ -- 726
+substring$ -- 761
+swap$ -- 867
 text.length$ -- 2
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 339
+type$ -- 0
 warning$ -- 0
-while$ -- 178
-width$ -- 0
-write$ -- 492
+while$ -- 102
+width$ -- 40
+write$ -- 381
 (There was 1 error message)
