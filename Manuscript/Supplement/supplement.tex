@@ -43,7 +43,14 @@ We investigated if model predictive accuracy was biased by either parasite speci
 
  
   
- 
+  \newpage
+\begin{figure}[h]
+  \includegraphics[width=\textwidth]{../Figures/hostNumAccuracy.pdf}
+  \caption{Accuracy (Area under Receiver operating characteristic (ROC) curves) for boosted regression models trained using host traits, parasite community similarity, geographic variables, and all available data as a function of the number of hosts the parasite species was collected on ($x$-axis). This host range estimate was uncorrelated to accuracy, though some models trained on host traits (black dots) performed poorly when parasite species were specific to a smaller number of host species. Lines correspond to fitted splines (spar = 0.5, to restrict possibility of ``oversmoothing''). }
+ \label{fig:HostNum}
+ \end{figure}
+
+  
  \newpage
  \begin{figure}[h!]
   \includegraphics[width=\textwidth]{../Figures/parTypeColor.pdf}
@@ -52,14 +59,5 @@ We investigated if model predictive accuracy was biased by either parasite speci
  \end{figure}
 
 
- 
- 
-\begin{figure}[h]
-  \includegraphics[width=\textwidth]{../Figures/hostNumAccuracy.pdf}
-  \caption{Accuracy (Area under Receiver operating characteristic (ROC) curves) for boosted regression models trained using host traits, parasite community similarity, geographic variables, and all available data as a function of the number of hosts the parasite species was collected on ($x$-axis). This host range estimate was uncorrelated to accuracy, though some models trained on host traits (black dots) performed poorly when parasite species were specific to a smaller number of host species. Lines correspond to fitted splines (spar = 0.5, to restrict possibility of ``oversmoothing''). }
- \label{fig:HostNum}
- \end{figure}
-
- 
  
  \end{document}

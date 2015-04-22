@@ -1,0 +1,102 @@
+# First two sentences of abstract need to be re-thought
+
+okay.
+
+# How important is the 20 reports cutoff?
+
+Limits accuracy detection, right? If I train on 80% of the data, odds are that I'll have approximately 16 occurrences in the training set to predict 4 occurrences in the test set. My accuracy measure becomes really coarse going fewer than 20 occurrences as a result of this. 
+
+
+# Why do you think parasite community is the important information to have? Any candidate mechanistic explanations?
+
+Parasite communities likely just reflect unmeasured variation in host traits and geography.  No information about parasite traits is incorporated into this analysis. 
+
+
+
+#What are the implications for how parasites integrate into novel communities?
+
+Since this method is agnostic to parasite identity, the only information needed to determine which hosts a given parasite will infect in a new host community is information on what parasites infect hosts in the community. 
+
+
+
+#Lines 22-28 - why are these different "views" -- I think they are empirically testable predictions 
+I think this may have been a semantical issue. I've changed "view" to "considered", and have tried to present this paragraph as a "we don't really know what controls which hosts a parasite will infect, but there is a pretty large variety of ideas out there, and few empirical tests". 
+
+
+#Line 39 - are there more reasons than those that are applied for why this would be of interest -- seems to me there should be basic science interest in these questions, too, for instance the ability to generate novel hypotheses about the mechanisms generating or maintaining specific host-parasite interactions or ecological theories about generalism and specialism
+
+I have added a line about basic research. I can't seem to find much literature attempting to do what I did, and I'm worried about overstepping my bounds. This ties into me being critical of the Strona paper, because it is simply me trying to both compare and distance my study from their paper, even though I'm using the same data. I don't know how closely to compare my study with theirs, since I can't use their algorithm to produce a model able to be tested on a hold-out data set, and therefore can't compare our studies. 
+
+
+#Lines 50-52 - you say "few studies" but cite none -- tell us about the few that do exist
+
+This has been changed. To my knowledge, this is the first study attempting to predict host community composition of a given parasite. Please correct me if I'm wrong. It seems like I would have to be, right?
+
+#Line 73 - this is just critical - can you be more constructive?
+
+Fair point. Changed.
+
+
+#I think methods could be rewritten more succinctly, for instance it you start by "We defined an occurrence of host-parasite relationship as a geographically unique record reporting a parasite species with a particular host species" then you can proceed to describe the 20 record cutoff more simply
+
+Changed.
+
+#Don't just report that missing variables were imputed, but state how they were imputed
+
+Changed.
+
+# What is the rationale or citation justifying the PCA constructed features? Is this preferred to clustering? Is there some information leakage or other circularity going on here or something else in that the PCA is constructed on the host-parasite dataset, which is then predicted from the model
+
+I think this stems from a confusion about what I'm predicting, and how I formed the PCA, though you may absolutely be right that there's something fishy (no pun intended) about the PCA usage. It seemed like a straight-forward way to condense the parasite community information. I have re-written the PCA part for clarity. 
+
+
+# How sensitive is your outcome to the five times rule in line 135? Can you study this numerically?
+
+I don't imagine very sensitive. What did you have in mind for investigating this? I could simply set a threshold of background points to include (e.g. 500 seems to be common), but that seems 1) just as uninformed as my 5x rule, and 2) disproportinately influence predictive accuracy of host specific parasites (few occurrence values)(...right?). 
+
+
+
+# In general, methods not described linearly -- suggest to re-order, for instance put background data generation in data construction paragraph
+
+Changed.
+
+
+# Cite Brieman for permutation methods for variable importance
+
+Changed.
+
+
+#Null model paragraph should be introduced by the worry that models may be overfit, so this is really a check on AUC as a method of comparison (analogous to the experimentalists negative control?)
+
+Changed.
+
+
+#Report AUC with standard errors 
+
+Done. Figure 1 cut, and replaced by small table.
+
+
+
+#References missing from first paragraph of discussion
+
+Fixed.
+
+
+
+#In general, the paper seems to take a negative attitude toward Strona and Lafferty -- often critical -- but does not engage that work very well, probably need to find a better balance
+
+You're right. This has been changed to be less combative and critical of Strona's work. 
+
+
+
+
+#I'm not sure that the integration with a novel host/community is the right context? Does your analysis actually answer this question? If you are presented with a new candidate host species, can you say if and why a given parasite will infect it?
+
+If, yes. Why, no.
+
+
+
+
+
+
+

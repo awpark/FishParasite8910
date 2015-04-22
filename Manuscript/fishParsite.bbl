@@ -1,5 +1,16 @@
-\begin{thebibliography}{33}
+\begin{thebibliography}{38}
 \providecommand{\natexlab}[1]{#1}
+
+\bibitem[{Adamson and Caira(1994)}]{adamson1994}
+Adamson, M., and J.~Caira. 1994.
+\newblock Evolutionary factors influencing the nature of parasite specificity.
+\newblock Parasitology 109:S85--S95.
+
+\bibitem[{Anderson(2001)}]{anderson2001}
+Anderson, M.~J. 2001.
+\newblock Permutation tests for univariate or multivariate analysis of variance
+  and regression.
+\newblock Canadian journal of fisheries and aquatic sciences 58:626--639.
 
 \bibitem[{Arneberg(2002)}]{arneberg2002}
 Arneberg, P. 2002.
@@ -13,10 +24,21 @@ Braga, M.~P., E.~Razzolini, and W.~A. Boeger. 2014.
 \newblock Drivers of parasite sharing among neotropical freshwater fishes.
 \newblock Journal of Animal Ecology .
 
+\bibitem[{Breiman(2001)}]{breiman2001}
+Breiman, L. 2001.
+\newblock Random forests.
+\newblock Machine learning 45:5--32.
+
 \bibitem[{Britton(2013)}]{britton2013}
 Britton, J.~R. 2013.
 \newblock Introduced parasites in food webs: new species, shifting structures?
 \newblock Trends in Ecology \& Evolution 28:93--99.
+
+\bibitem[{Bush(2001)}]{bush2001}
+Bush, A.~O. 2001.
+\newblock Communities of parasites.
+\newblock Pages 405--433 \emph{in} Parasitism: the diversity and ecology of
+  animal parasites. Cambridge University Press.
 
 \bibitem[{Canard et~al.(2014)Canard, Mouquet, Mouillot, Stanko, Miklisova, and
   Gravel}]{canard2014}
@@ -180,6 +202,13 @@ Rohr, R.~P., R.~E. Naisbit, C.~Mazza, and L.-F. Bersier. 2013.
 \newblock Matching-centrality decomposition and the forecasting of new links in
   networks.
 \newblock arXiv preprint arXiv:1310.4633 .
+
+\bibitem[{Sasal et~al.(1999)Sasal, Trouv{\'e}, M{\"u}ller-Graf, and
+  Morand}]{sasal1999}
+Sasal, P., S.~Trouv{\'e}, C.~M{\"u}ller-Graf, and S.~Morand. 1999.
+\newblock Specificity and host predictability: a comparative analysis among
+  monogenean parasites of fish.
+\newblock Journal of Animal Ecology 68:437--444.
 
 \bibitem[{Strona and Lafferty(2012{\natexlab{\emph{a}}})}]{strona2012}
 Strona, G., and K.~D. Lafferty. 2012{\natexlab{\emph{a}}}.

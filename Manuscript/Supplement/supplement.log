@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.10.14)  17 APR 2015 11:46
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.10.14)  20 APR 2015 11:32
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -329,24 +329,27 @@ File: ../Figures/parAccuracy.pdf Graphic file (type pdf)
 Package pdftex.def Info: ../Figures/parAccuracy.pdf used on input line 39.
 (pdftex.def)             Requested size: 452.9679pt x 452.9711pt.
  [2 <../Figures/parAccuracy.pdf>]
-<../Figures/parTypeColor.pdf, id=22, 578.16pt x 361.35pt>
-File: ../Figures/parTypeColor.pdf Graphic file (type pdf)
-
-<use ../Figures/parTypeColor.pdf>
-Package pdftex.def Info: ../Figures/parTypeColor.pdf used on input line 49.
-(pdftex.def)             Requested size: 452.9679pt x 283.10349pt.
-
-<../Figures/hostNumAccuracy.pdf, id=23, 361.35pt x 361.35pt>
+<../Figures/hostNumAccuracy.pdf, id=22, 361.35pt x 361.35pt>
 File: ../Figures/hostNumAccuracy.pdf Graphic file (type pdf)
 
 <use ../Figures/hostNumAccuracy.pdf>
-Package pdftex.def Info: ../Figures/hostNumAccuracy.pdf used on input line 58.
+Package pdftex.def Info: ../Figures/hostNumAccuracy.pdf used on input line 48.
 (pdftex.def)             Requested size: 452.9679pt x 452.9711pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[3 <../Figures/parTypeColor.pdf>] [4 <../Figures/hostNumAccuracy.pdf>]
+<../Figures/parTypeColor.pdf, id=23, 578.16pt x 361.35pt>
+File: ../Figures/parTypeColor.pdf Graphic file (type pdf)
+
+<use ../Figures/parTypeColor.pdf>
+Package pdftex.def Info: ../Figures/parTypeColor.pdf used on input line 56.
+(pdftex.def)             Requested size: 452.9679pt x 283.10349pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[3 <../Figures/hostNumAccuracy.pdf>] [4 <../Figures/parTypeColor.pdf>]
 (./supplement.aux) ) 
 Here is how much of TeX's memory you used:
  3580 strings out of 495032
@@ -362,7 +365,7 @@ i10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pf
 b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr
 /share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/
 texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb>
-Output written on supplement.pdf (4 pages, 128647 bytes).
+Output written on supplement.pdf (4 pages, 128513 bytes).
 PDF statistics:
  63 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
